@@ -1,0 +1,2450 @@
+<!DOCTYPE html>
+	<html class="sl-root decks export offline loaded">
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>Anatomy of an openstack distribution: Slides</title>
+		<meta name="description" content="Slides">
+
+		<link rel="stylesheet" type="text/css" href="lib/offline-v2.css">
+
+		<!-- Team CSS -->
+		<style id="global-css-output" type="text/css">
+			@import url("https://s3.amazonaws.com/static.slid.es/fonts/overpass2/overpass2.css");
+.reveal {
+  
+
+  /*fix icon inversion*/
+
+}
+.reveal svg,
+.reveal text,
+.reveal tspan,
+.reveal svg text {
+  font-family: "Overpass 2", Overpass, sans-serif !important;
+  color: currentcolor;
+  fill: currentcolor;
+}
+.reveal .sl-block {
+  color: #354045;
+  fill: currentcolor;
+}
+.reveal .sl-block svg {
+  color: currentcolor;
+}
+.reveal .has-dark-background,
+.reveal .has-dark-background > .sl-block {
+  color: white;
+  fill: currentcolor;
+}
+.reveal section > .sl-block .redhat-logo .logotext {
+  fill: #000000;
+}
+.reveal .has-dark-background > .sl-block .redhat-logo .logotext {
+  fill: #ffffff;
+}
+.reveal .has-dark-background > .sl-block[data-block-type="image"] {
+  color: #ffffff;
+}
+.reveal [fill="none"] {
+  fill: none !important;
+}
+.reveal [fill="#a30000"] {
+  fill: #aa0000 !important;
+}
+.reveal [fill="#cc2029"],
+.reveal [fill="#cb2027"],
+.reveal [fill="#c00"] {
+  fill: #cc0000 !important;
+}
+.reveal [fill="#fff"] {
+  fill: #ffffff !important;
+}
+.reveal [fill="#6d6e70"] {
+  fill: #6d6e70 !important;
+}
+.reveal [fill="#231f20"] {
+  fill: currentcolor !important;
+}
+.reveal [fill="#efab1f"] {
+  fill: #efab1f !important;
+}
+.reveal [fill="#92d400"] {
+  fill: #92d400 !important;
+}
+.reveal .has-dark-background [fill="#6d6e70"] {
+  fill: #266272 !important;
+}
+.reveal .has-dark-background [fill="#fff"] {
+  fill: #555555 !important;
+}
+.reveal .has-dark-background [fill="#fff"] {
+  fill: #333333 !important;
+}
+.reveal .has-dark-background [stroke="#231f20"] {
+  stroke: currentcolor;
+}
+.reveal [data-inline-svg="true"] img {
+  display: none;
+}
+
+		</style>
+
+		<!-- Theme CSS -->
+		<style id="theme-css-output" type="text/css">
+			@import url(//overpassmonotest-30e2.kxcdn.com/overpass-mono.css);
+.reveal {
+  
+
+  /*
+.sl-block[data-block-type="snippet"],
+.sl-block[data-block-type="image"] 
+{
+text,
+tspan,
+polygon,
+path,
+rect,
+ellipse {
+  fill: currentcolor;
+}
+}
+*/
+
+  /*slide-default*/
+
+  /*Custom Ordered Lists */
+
+  /*helpers*/
+
+  /*fixing left aligned text*/
+
+  /*h1,h2,h3,h4,h5,h6{&::first-letter{margin-left:-.09em;}}*/
+
+  /*icon absolute brute-fix*/
+
+  /*
+.present .icon.stroked path.long{ stroke-width: 2px ;
+-webkit-animation: icon-animation-long 3.5s 1.5s 1;
+-moz-animation:    icon-animation-long 3.5s 1.5s 1;
+animation:         icon-animation-long 3.5s 1.5s 1;
+}*/
+
+  /*
+.present .icon.stroked path.short{
+-webkit-animation: icon-animation-short 3.5s 1.5s 1;
+-moz-animation:    icon-animation-short 3.5s 1.5s 1;
+animation:         icon-animation-short 3.5s 1.5s 1;
+}*/
+
+  /*controls logic*/
+
+  /*animated logos with complex svg segments*/
+
+  /*transitions*/
+
+  /*logos svg files that contain inverted path alternates */
+
+  /* call to action */
+
+  /* tables in snippets.... the devil */
+
+  /* tables in text */
+
+  /*testimonial snippet */
+
+  /*for inverting images*/
+
+  /**/
+
+  /*code blocks*/
+
+  /* round line arrows */
+
+  /*fix icon inversion*/
+
+}
+.reveal.reveal[role="application"] > .backgrounds > .slide-background:first-child {
+  background-color: #900;
+  color: #fff;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-image: linear-gradient(-45deg, rgba(0, 0, 0, 0.075) 20%, rgba(0, 0, 0, 0.15) 20%, transparent 85%, rgba(0, 0, 0, 0.1) 85%);
+  min-height: 100vh;
+}
+.reveal.reveal[role="application"] > .backgrounds > .slide-background:first-child.has-light-background {
+  background-image: none;
+}
+.reveal.reveal .slides > .section:first-child,
+.reveal.reveal[role="application"] > .slides > .section:first-child .sl-block {
+  color: #fff;
+}
+.reveal .name {
+  white-space: nowrap;
+}
+.reveal .reveal,
+.reveal .sl-block,
+.reveal .sl-block-content,
+.reveal .sl-block-content div,
+.reveal .sl-block-content p,
+.reveal .sl-block-content h1,
+.reveal .sl-block-content h2,
+.reveal .sl-block-content h3,
+.reveal .sl-block-content h4 {
+  font-family: "Overpass 2", overpass, "Hiragino Kaku Gothic", "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ Pro W3", sans-serif;
+}
+.reveal .future .sl-block-content,
+.reveal .past .sl-block-content {
+  transition: none !important;
+}
+.reveal section,
+.reveal.reveal .has-dark-background,
+.reveal section.background-shade-dark {
+  color: #fff;
+}
+.reveal .backgrounds {
+  background: #f3f4f4;
+}
+.reveal .slide-background {
+  background-size: cover;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+}
+.reveal .slide-background.has-light-background {
+  /*background-image: url(//s3.amazonaws.com/media-p.slid.es/uploads/team-32/images/1297460/standard-background.svg);*/
+
+}
+.reveal .backgrounds .paint-it-red {
+  background-color: #c00 !important;
+  -moz-background-blend-mode: multiply;
+  -webkit-background-blend-mode: multiply;
+  -ms-background-blend-mode: multiply;
+  background-blend-mode: multiply;
+}
+.reveal .paint-it-red {
+  color: #fff;
+}
+.reveal .has-dark-background .icon.stroked path,
+.reveal section.background-shade-dark .icon.stroked path,
+.reveal section.light-foreground .icon.stroked path {
+  stroke: #fff !important;
+}
+.reveal .has-dark-background .redhat-product-logotype path,
+.reveal section.background-shade-dark .redhat-product-logotype path,
+.reveal section.light-foreground .redhat-product-logotype path {
+  fill: #ffffff;
+}
+.reveal .has-dark-background text.logotext,
+.reveal section.background-shade-dark text.logotext,
+.reveal section.light-foreground text.logotext,
+.reveal .has-dark-background .logotext text,
+.reveal section.background-shade-dark .logotext text,
+.reveal section.light-foreground .logotext text,
+.reveal .has-dark-background path.logotext,
+.reveal section.background-shade-dark path.logotext,
+.reveal section.light-foreground path.logotext,
+.reveal .has-dark-background path.logotype,
+.reveal section.background-shade-dark path.logotype,
+.reveal section.light-foreground path.logotype,
+.reveal .has-dark-background .logotext path,
+.reveal section.background-shade-dark .logotext path,
+.reveal section.light-foreground .logotext path {
+  fill: #fff !important;
+}
+.reveal .has-dark-background .closing-logo .logotext,
+.reveal section.background-shade-dark .closing-logo .logotext,
+.reveal section.light-foreground .closing-logo .logotext,
+.reveal .has-dark-background .redhat-logo .logotext,
+.reveal section.background-shade-dark .redhat-logo .logotext,
+.reveal section.light-foreground .redhat-logo .logotext {
+  fill: #ffffff !important;
+}
+.reveal .has-light-background .icon.stroked path {
+  stroke: currentcolor;
+}
+.reveal .has-light-background .redhat-logo .logotext {
+  fill: #000000 !important;
+}
+.reveal .sl-block-content ol li {
+  position: relative;
+  padding-bottom: .5em;
+}
+.reveal .sl-block-content ol li > p:first-child {
+  margin: 0;
+}
+.reveal .sl-block-content ol > li::before {
+  margin-left: -2.5em;
+}
+.reveal .sl-block-content > ol > li:before {
+  float: left;
+  text-align: center;
+  box-shadow: inset 0 0 0 .1em;
+  border-radius: 50%;
+}
+.reveal .sl-block-content ol {
+  counter-reset: section;
+  list-style-type: none;
+  margin: 0 0 0 2.5em;
+  display: block;
+}
+.reveal .sl-block-content ol ol {
+  margin-top: .5em;
+}
+.reveal .sl-block-content ol > li:before {
+  font-weight: 400;
+  display: inline-block;
+  width: 1.75em;
+  height: 1.75em;
+  line-height: 1.75em;
+  text-align: center;
+  letter-spacing: 0;
+  font-size: .75em;
+  margin: 0 0.75em 0 -2.5em;
+  counter-increment: section;
+  content: counters(section, ".") " ";
+}
+.reveal .sl-block-content > ol > li ol li:before {
+  opacity: .5;
+  text-align: left;
+  box-shadow: none;
+  letter-spacing: .1em;
+}
+.reveal .sl-block-content > ol > li > ol > li > ol > li:before {
+  width: 4em;
+  left: -3em;
+  font-size: .75em;
+}
+.reveal .has-dark-background .sl-block-content > ol > li:before {
+  color: currentcolor;
+  background-color: rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 0 0 0.2em rgba(0, 0, 0, 0.2);
+  font-weight: 500;
+  letter-spacing: -0.05em;
+}
+.reveal .sl-block-content > ol ol ol li:before {
+  opacity: 1;
+  font-size: .55em !important;
+  width: 3.5em !important;
+}
+.reveal .sl-block-content > ol ol ol {
+  margin-left: 1.5em !important;
+}
+.reveal .uppercase {
+  text-transform: uppercase;
+}
+.reveal .sl-block[data-block-type="text"] > .initial h1,
+.reveal .sl-block[data-block-type="text"] > .initial h2,
+.reveal .sl-block[data-block-type="text"] > .initial h3 {
+  text-transform: initial;
+}
+.reveal .force-mono text,
+.reveal .force-mono tspan,
+.reveal .force-mono polygon,
+.reveal .force-mono path,
+.reveal .force-mono rect,
+.reveal .force-mono ellipse {
+  fill: currentcolor !important;
+}
+.reveal .force-red .stroked path {
+  stroke: #c00;
+}
+.reveal .force-red,
+.reveal .force-red text,
+.reveal .force-red tspan,
+.reveal .force-red polygon,
+.reveal .force-red path,
+.reveal .force-red rect,
+.reveal .force-red ellipse {
+  color: #c00;
+  fill: currentcolor !important;
+}
+.reveal .force-red .stroked {
+  fill: none;
+  stroke: #cc0000;
+}
+.reveal .background-shade-dark .sl-block {
+  color: #fff;
+}
+.reveal .dark-foreground text.logotext,
+.reveal section.background-shade-light text.logotext,
+.reveal section.dark-foreground text.logotext,
+.reveal .dark-foreground .logotext text,
+.reveal section.background-shade-light .logotext text,
+.reveal section.dark-foreground .logotext text,
+.reveal .dark-foreground path.logotext,
+.reveal section.background-shade-light path.logotext,
+.reveal section.dark-foreground path.logotext,
+.reveal .dark-foreground path.logotype,
+.reveal section.background-shade-light path.logotype,
+.reveal section.dark-foreground path.logotype,
+.reveal .dark-foreground .logotext path,
+.reveal section.background-shade-light .logotext path,
+.reveal section.dark-foreground .logotext path,
+.reveal .dark-foreground .product,
+.reveal section.background-shade-light .product,
+.reveal section.dark-foreground .product {
+  fill: currentcolor !important;
+}
+.reveal .dark-foreground .redhat-logo .logotext,
+.reveal section.background-shade-light .redhat-logo .logotext,
+.reveal section.dark-foreground .redhat-logo .logotext {
+  fill: currentcolor !important;
+}
+.reveal .slide-background.background-shade-dark:before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(40, 40, 40, 0.8);
+}
+.reveal .slide-background.background-shade-light:before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+.reveal .slides section {
+  text-align: left;
+}
+.reveal .slides section h1 {
+  line-height: 1em;
+  font-weight: 700 ;
+  font-size: 3em ;
+}
+.reveal .slides section h2 {
+  font-size: 2em;
+  font-weight: 400 ;
+  line-height: 1.15em;
+}
+.reveal .slides section h3 {
+  font-weight: 700 ;
+  font-size: 1em ;
+  line-height: 1.25em;
+}
+.reveal .slides section p {
+  margin-bottom: .5em;
+}
+.reveal .slides section blockquote {
+  font-style: normal;
+  box-shadow: none;
+}
+.reveal .progress {
+  background-color: transparent;
+}
+.reveal .progress span {
+  background-color: #5e6a71;
+}
+.reveal .absolute-element svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100% !important;
+  height: 100% !important;
+}
+.reveal .icon.stroked {
+  width: 282px;
+  height: 282px;
+}
+.reveal .icon.stroked.icon-arrow path {
+  stroke-width: 4px !important;
+}
+.reveal .icon.stroked path {
+  fill: none;
+  stroke-width: 1.5px;
+  transition-delay: .5s !important;
+  stroke-dashoffset: 0;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke: currentcolor;
+}
+.reveal .icon.stroked path.long {
+  stroke-dasharray: 420,420;
+  transition: 2.5s all ease;
+}
+.reveal .icon.stroked path.longer {
+  stroke-dasharray: 512,512;
+  transition: 2.5s all ease;
+}
+.reveal .icon.stroked path.short {
+  stroke-dasharray: 90,90;
+  transition: 5s all ease;
+}
+.reveal .icon.stroked path.shortest {
+  stroke-dasharray: 5,5;
+  transition: 2s all ease;
+}
+.reveal .icon.stroked path.round {
+  stroke-linecap: round ;
+  stroke-linejoin: round ;
+}
+.reveal .icon.stroked path.virtual {
+  transition: .5s all ease;
+  stroke-dasharray: 1.1, 3;
+  stroke-linecap: round ;
+}
+.reveal .icon.stroked path.dashed {
+  stroke-dasharray: 3, 3;
+}
+.reveal .icon.stroked path.hand {
+  stroke-linecap: round;
+}
+.reveal .present path.virtual {
+  -webkit-animation: virtual-outline 60s infinite linear;
+  -moz-animation: virtual-outline 60s infinite linear;
+  animation: virtual-outline 60s infinite linear;
+}
+@-webkit-keyframes virtual-outline {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: 512;
+  }
+}
+@-moz-keyframes virtual-outline {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: 512;
+  }
+}
+@keyframes virtual-outline {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: 512;
+  }
+}
+.reveal a {
+  box-shadow: 0 0.066666em;
+}
+.reveal .overview section.present {
+  border: 12px solid white !important;
+  box-shadow: 0 0 0 10px #ffffff, inset 0 0 0 6px rgba(0, 0, 0, 0.2);
+}
+.reveal .rh-pattern {
+  width: 256px;
+  height: 256px;
+}
+.reveal .rh-pattern path {
+  transition: all .5s ease;
+}
+.reveal .future .rh-pattern path {
+  stroke-dasharray: 0, 85 !important;
+}
+.reveal .present .rh-pattern path {
+  stroke-dasharray: 80, 0 !important;
+}
+.reveal div[data-block-type="snippet"] .sl-block-content > svg,
+.reveal div[data-block-type="snippet"] > .sl-block-content > svg,
+.reveal div[data-block-type="snippet"] .icon,
+.reveal div[data-block-type="snippet"] .product {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+}
+.reveal div[data-block-type="snippet"] .sl-block-content > svg:not(:last-child) {
+  position: relative;
+}
+.reveal div[data-block-type="snippet"] .icon {
+  top: -15%;
+  right: -15%;
+  bottom: -15%;
+  left: -15%;
+  width: 130%;
+  height: 130%;
+}
+.reveal div[data-block-type="snippet"] {
+  min-width: 60px !important;
+}
+.reveal div[data-block-type="text"] {
+  font-size: 20px;
+}
+.reveal .triangle-element,
+.reveal .triangle-element * {
+  user-select: none;
+}
+.reveal .has-light-background .closing-logo.logotype path {
+  fill: black !important;
+}
+@-webkit-keyframes closing-animation {
+  0% {
+    -webkit-transform: scale(4) translate(40%);
+    transform: scale(4) translate(40%);
+    opacity: 0;
+  }
+  80% {
+    -webkit-transform: scale(1) translate(30%);
+    transform: scale(1) translate(30%);
+  }
+}
+@-moz-keyframes closing-animation {
+  0% {
+    -webkit-transform: scale(4) translate(40%);
+    transform: scale(4) translate(40%);
+    opacity: 0;
+  }
+  80% {
+    -webkit-transform: scale(1) translate(30%);
+    transform: scale(1) translate(30%);
+  }
+}
+@-o-keyframes closing-animation {
+  0% {
+    -webkit-transform: scale(4) translate(40%);
+    transform: scale(4) translate(40%);
+    opacity: 0;
+  }
+  80% {
+    -webkit-transform: scale(1) translate(30%);
+    transform: scale(1) translate(30%);
+  }
+}
+@keyframes closing-animation {
+  0% {
+    -webkit-transform: scale(4) translate(40%);
+    transform: scale(4) translate(40%);
+    opacity: 0;
+  }
+  80% {
+    -webkit-transform: scale(1) translate(30%);
+    transform: scale(1) translate(30%);
+  }
+}
+.reveal .present .closing-logo.icon {
+  -webkit-animation: closing-animation 1.5s 1;
+  -moz-animation: closing-animation 1.5s 1;
+  -o-animation: closing-animation 1.5s 1;
+  animation: closing-animation 1.5s 1;
+}
+.reveal .present .closing-logo.logotype {
+  -webkit-animation: closing-text-animation 1.8s 1;
+  -moz-animation: closing-text-animation 1.8s 1;
+  -o-animation: closing-text-animation 1.8s 1;
+  animation: closing-text-animation 1.8s 1;
+}
+@-webkit-keyframes closing-text-animation {
+  0% {
+    opacity: 0;
+    -webkit-transform: translate(-10%);
+    transform: translate(-10%);
+  }
+  70% {
+    -webkit-transform: translate(-10%);
+    transform: translate(-10%);
+    opacity: 0;
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+    -webkit-transform: none;
+  }
+}
+@-moz-keyframes closing-text-animation {
+  0% {
+    opacity: 0;
+    -webkit-transform: translate(-10%);
+    transform: translate(-10%);
+  }
+  70% {
+    -webkit-transform: translate(-10%);
+    transform: translate(-10%);
+    opacity: 0;
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+    -webkit-transform: none;
+  }
+}
+@keyframes closing-text-animation {
+  0% {
+    opacity: 0;
+    -webkit-transform: translate(-10%);
+    transform: translate(-10%);
+  }
+  70% {
+    -webkit-transform: translate(-10%);
+    transform: translate(-10%);
+    opacity: 0;
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+    -webkit-transform: none;
+  }
+}
+.reveal .brand-pattern-paths path,
+.reveal .pattern-path {
+  stroke-width: 1;
+  fill: none;
+}
+.reveal .brand-pattern-paths path {
+  fill: none !important;
+}
+.reveal pattern {
+  patterntransform: scale(2) !important;
+}
+.reveal pattern.normal use {
+  stroke: currentcolor;
+  fill: none;
+}
+.reveal pattern.light use {
+  stroke: #fff !important;
+  fill: none;
+}
+.reveal pattern.dark use {
+  stroke: #000 !important;
+  fill: none;
+}
+.reveal .brand-pattern {
+  min-width: 40px;
+  min-height: 40px;
+  position: absolute;
+  top: 0 ;
+  left: 0 ;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+}
+.reveal .brand-pattern path,
+.reveal .brand-pattern rect {
+  width: 100% !important;
+  height: 100%;
+}
+.reveal .brand-pattern.corporate {
+  fill: url(#pattern-corporate);
+}
+.reveal #pattern-corporate-2 use {
+  stroke: #dd0000;
+}
+.reveal #pattern-corporate use {
+  stroke: #cc0000;
+}
+.reveal section,
+.reveal .slide-background {
+  -webkit-backface-visibility: hidden;
+  -ms-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.reveal .slides > section.transition-slide,
+.reveal .slides > section.transition-slide + section.future,
+.reveal .slides > section.transition-slide + section.present,
+.reveal .backgrounds > .slide-background.transition-slide,
+.reveal .backgrounds > .slide-background.transition-slide + .slide-background.future,
+.reveal .backgrounds > .slide-background.transition-slide + .slide-background.present {
+  transition: all 1s ease  !important;
+}
+.reveal .backgrounds > .slide-background.transition-slide {
+  opacity: 1 ;
+}
+.reveal .backgrounds > .slide-background.transition-slide.past {
+  z-index: 99;
+  -webkit-transform: translate(-100%, 0);
+  -ms-transform: translate(-100%, 0);
+  transform: translate(-100%, 0);
+}
+.reveal .backgrounds > .slide-background.transition-slide.future,
+.reveal .backgrounds > .slide-background.transition-slide.present + .slide-background.future {
+  -webkit-transform: translate(100%, 0);
+  -ms-transform: translate(100%, 0);
+  transform: translate(100%, 0);
+}
+.reveal .slides > section.transition-slide.past {
+  z-index: 99;
+  -webkit-transform: translate(-150%, 0);
+  -ms-transform: translate(-150%, 0);
+  transform: translate(-150%, 0);
+  visibility: hidden;
+}
+.reveal .slides > section.transition-slide.future,
+.reveal .slides > section.transition-slide.future + section {
+  -webkit-transform: translate(150%, 0);
+  -ms-transform: translate(150%, 0);
+  transform: translate(150%, 0);
+  visibility: hidden;
+}
+.reveal .slides > section.transition-slide-up,
+.reveal .slides > section.transition-slide-up + section.future,
+.reveal .slides > section.transition-slide-up + section.present,
+.reveal .backgrounds > .slide-background.transition-slide-up,
+.reveal .backgrounds > .slide-background.transition-slide-up + .slide-background.future .backgrounds > .slide-background.transition-slide-up + .slide-background.present {
+  transition: all 1s ease  !important;
+}
+.reveal .backgrounds > .slide-background.transition-slide-up {
+  opacity: 1 ;
+}
+.reveal .backgrounds > .slide-background.transition-slide-up.past {
+  z-index: 99;
+  -webkit-transform: translate(0, -100%);
+  -ms-transform: translate(0, -100%);
+  transform: translate(0, -100%);
+}
+.reveal .backgrounds > .slide-background.transition-slide-up.future,
+.reveal .backgrounds > .slide-background.transition-slide-up.present + .slide-background.future {
+  -webkit-transform: translate(0, 100%);
+  -ms-transform: translate(0, 100%);
+  transform: translate(0, 100%);
+}
+.reveal .slides > section.transition-slide-up.past {
+  z-index: 99;
+  -webkit-transform: translate(0, -150%);
+  -ms-transform: translate(0, -150%);
+  transform: translate(0, -150%);
+  visibility: hidden;
+}
+.reveal .slides > section.transition-slide-up.future,
+.reveal .slides > section.transition-slide-up.present + section {
+  -webkit-transform: translate(0, 150%);
+  -ms-transform: translate(0, 150%);
+  transform: translate(0, 150%);
+  visibility: hidden;
+}
+.reveal .slides > section.transition-zoom-in,
+.reveal .slides > section.transition-zoom-in + section.future,
+.reveal .slides > section.transition-zoom-in + section.present,
+.reveal .backgrounds > .slide-background.transition-zoom-in,
+.reveal .backgrounds > .slide-background.transition-zoom-in + .slide-background.future .backgrounds > .slide-background.transition-zoom-in + .slide-background.present {
+  -webkit-transition: all 1s ease  !important;
+  -moz-transition: all 1s ease  !important;
+  transition: all 1s ease  !important;
+}
+.reveal .backgrounds > .slide-background.transition-zoom-in.past {
+  opacity: 0 !important;
+  -webkit-transform: scale(1.5);
+  -ms-transform: scale(0.1 0.5);
+  transform: scale(1.5);
+}
+.reveal .backgrounds > .slide-background.transition-zoom-in.future,
+.reveal .backgrounds > .slide-background.transition-zoom-in.present + .slide-background.future {
+  opacity: 0 !important;
+  -webkit-transform: scale(0.01);
+  -ms-transform: scale(0.01);
+  transform: scale(0.01);
+}
+.reveal .past {
+  z-index: -1;
+  opacity: 0 !important;
+}
+.reveal .present + .slide-background.future {
+  z-index: 99;
+}
+.reveal .slides > section.transition-zoom-in.past {
+  z-index: 99;
+  -webkit-transform: scale(1.5);
+  -ms-transform: scale(1.5);
+  transform: scale(1.5);
+  visibility: hidden;
+}
+.reveal .slides > section.transition-zoom-in.future {
+  -webkit-transform: scale(0.1);
+  -ms-transform: scale(0.1);
+  transform: scale(0.1);
+  visibility: hidden;
+}
+@-webkit-keyframes icon-animation-long {
+  0% {
+    stroke-dashoffset: 420;
+    stroke-width: .5px;
+  }
+}
+@-moz-keyframes icon-animation-long {
+  0% {
+    stroke-dashoffset: 420;
+    stroke-width: .5px;
+  }
+}
+@keyframes icon-animation-long {
+  0% {
+    stroke-dashoffset: 420;
+    stroke-width: .5px;
+  }
+}
+@-webkit-keyframes icon-animation-short {
+  0% {
+    stroke-dashoffset: 90;
+  }
+}
+@-moz-keyframes icon-animation-short {
+  0% {
+    stroke-dashoffset: 90;
+  }
+}
+@keyframes icon-animation-short {
+  0% {
+    stroke-dashoffset: 90;
+  }
+}
+.reveal .present .animate.icon.stroked path,
+.reveal .present .animate .icon.stroked path,
+.reveal .fragment .icon.stroked path {
+  animation: 0;
+  -moz-animation: 0;
+  -webkit-animation: 0;
+  display: none;
+}
+.reveal .present .animate.icon.stroked path.long,
+.reveal .present .animate .icon.stroked path.long,
+.reveal .fragment.visible .icon.stroked path.long {
+  display: block;
+  stroke-width: 2px ;
+  -webkit-animation: icon-animation-long 3.5s 0.5s 1;
+  -moz-animation: icon-animation-long 3.5s 0.5s 1;
+  animation: icon-animation-long 3.5s 0.5s 1;
+}
+.reveal .present .animate.icon.stroked path.short,
+.reveal .present .animate .icon.stroked path.short,
+.reveal .fragment.visible .icon.stroked path.short {
+  display: block;
+  -webkit-animation: icon-animation-short 3.5s 0.5s 1 !important;
+  -moz-animation: icon-animation-short 3.5s 0.5s 1 !important;
+  animation: icon-animation-short 3.5s 0.5s 1 !important;
+}
+.reveal .triangle-element {
+  transition: all 0.4s cubic-bezier(0.21, 0.9, 0.55, 1) 5s;
+}
+.reveal.reveal:hover .triangle-element {
+  transition: all 1s cubic-bezier(0.21, 0.9, 0.55, 1.16) 0s !important;
+  top: 100% !important;
+  left: 100% !important;
+  opacity: 0.95;
+}
+.reveal .has-dark-background .only-dark {
+  display: none;
+}
+.reveal .has-light-background .only-light {
+  display: none;
+}
+.reveal .thinner .icon.stroked path {
+  stroke-width: 1px !important;
+}
+.reveal .thinnest .icon.stroked path {
+  stroke-width: 0.05em !important;
+}
+.reveal .thicker .icon.stroked path {
+  stroke-width: 3px !important;
+}
+.reveal .thickest .icon.stroked path {
+  stroke-width: 4px !important;
+}
+.reveal .angle {
+  -ms-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+.reveal .rangle {
+  -ms-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+.reveal .sl-block > .vertical {
+  -ms-transform: rotate(-90deg);
+  -moz-transform: rotate(-90deg);
+  -webkit-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+}
+.reveal .skewed {
+  transition: all 1s cubic-bezier(0.13, 0.81, 0.08, 1);
+  -moz-transform: skew(-45deg, 0);
+  -ms-transform: skew(-45deg, 0);
+  -webkit-transform: skew(-45deg, 0);
+  transform: skew(-45deg, 0);
+}
+.reveal .future .skewed {
+  margin-left: -800%;
+  opacity: 0;
+}
+.reveal .past .skewed {
+  margin-left: 800%;
+  opacity: 0;
+}
+.reveal .item-label,
+.reveal .item-box {
+  letter-spacing: 0em;
+  font-weight: 500;
+}
+.reveal .epic-content-box {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+.reveal .has-dark-background .epic-content-box {
+  box-shadow: inset 0 0 0.51em rgba(0, 0, 0, 0.25), 0 0.05em 0.05em rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.15);
+}
+.reveal .has-light-background .epic-content-box {
+  box-shadow: inset 0 0 0.2em rgba(255, 255, 255, 0.5), 0 0.06666em 0.555em 0 rgba(0, 0, 0, 0.12);
+}
+.reveal .controls {
+  bottom: 1%;
+  right: 1%;
+}
+.reveal .controls button {
+  opacity: 0;
+}
+.reveal .controls button.enabled {
+  opacity: 1;
+}
+.reveal .controls {
+  opacity: 0 !important;
+  transition: all .5s ease 4.8s;
+  transform: scale(0.4);
+}
+.reveal.reveal:hover .controls {
+  transform: scale(1);
+  opacity: 1 !important;
+  transition: all .5s ease 0s;
+}
+.reveal .backgrounds {
+  transition-property: height;
+  transition-duration: 1s;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+.reveal .complex-logo {
+  min-height: 70px;
+  min-width: 70px;
+  width: 100%;
+}
+.reveal .complex-logo,
+.reveal .complex-logo svg,
+.reveal .complex-logo > div {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.reveal .complex-logo > div.line-icon,
+.reveal .complex-logo svg > div.line-icon,
+.reveal .complex-logo > div > div.line-icon,
+.reveal .complex-logo > div.logomark,
+.reveal .complex-logo svg > div.logomark,
+.reveal .complex-logo > div > div.logomark {
+  transform-origin: 12% 50%;
+}
+.reveal .animated .complex-logo div {
+  transition: all .5s ease;
+}
+.reveal .animated .complex-logo div.line-icon {
+  transition-delay: 2s;
+}
+.reveal .animated .complex-logo div.line-icon path {
+  transition: all 1s ease .52s;
+  stroke-dasharray: 100 ,10;
+}
+.reveal .animated .complex-logo div.event-name {
+  transition-delay: 1s;
+}
+.reveal .animated .complex-logo div.location {
+  transition-delay: 1.4s;
+}
+.reveal .future .animated .complex-logo > div {
+  transition: none;
+}
+.reveal .future .animated .complex-logo > div.line-icon path {
+  stroke-dasharray: 0 ,100;
+  transition: none;
+}
+.reveal .future .animated .complex-logo {
+  /*.line-icon{transform:rotate(30deg); opacity:0;}*/
+
+}
+.reveal .future .animated .complex-logo .logomark {
+  transform: translate(0, -20%);
+}
+.reveal .future .animated .complex-logo .location {
+  transform: translate(0, 0.5em);
+  opacity: 0;
+}
+.reveal .future .animated .complex-logo .event-name {
+  opacity: 0;
+  transform: translate(-0.6em, 0);
+}
+.reveal .lowercase {
+  text-transform: lowercase;
+}
+.reveal .pop-in.fragment {
+  -webkit-transform: scale(0.2);
+  -moz-transform: scale(0.2);
+  -ms-transform: scale(0.2);
+  transform: scale(0.2);
+  -webkit-transition: 2s ease 0.25s;
+  -moz-transition: 2s ease 0.25s;
+  -ms-transition: 2s ease 0.25s;
+  transition: 2s ease 0.25s;
+  -webkit-animation-delay: 0.66s;
+  -moz-animation-delay: 0.66s;
+  -ms-animation-delay: 0.66s;
+  animation-delay: 0.66s;
+}
+.reveal .pop-in.fragment.visible {
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
+}
+.reveal .pop-in.fragment.current-fragment {
+  color: #c22;
+}
+.reveal .grow-width {
+  -webkit-transition: all 0.5s ease 0.2s;
+  -moz-transition: all 0.5s ease 0.2s;
+  -o-transition: all 0.5s ease 0.2s;
+  -ms-transition: all 0.5s ease 0.2s;
+  transition: all 0.5s ease 0.2s;
+}
+.reveal .future .grow-width {
+  width: 0% !important;
+  -webkit-transition: none;
+  -moz-transition: none;
+  -o-transition: none;
+  -ms-transition: none;
+  transition: none;
+}
+.reveal .stampit {
+  -webkit-transition: all 1s cubic-bezier(0.79, 0.53, 0.46, 1.3) 1s;
+  -moz-transition: all 1s cubic-bezier(0.79, 0.53, 0.46, 1.3) 1s;
+  -ms-transition: all 1s cubic-bezier(0.79, 0.53, 0.46, 1.3) 1s;
+  transition: all 1s cubic-bezier(0.79, 0.53, 0.46, 1.3) 1s;
+}
+.reveal .future .stampit {
+  -webkit-transform: rotate(-12deg) scale(2);
+  -moz-transform: rotate(-12deg) scale(2);
+  -ms-transform: rotate(-12deg) scale(2);
+  transform: rotate(-12deg) scale(2);
+  -webkit-transition: none;
+  -moz-transition: none;
+  -ms-transition: none;
+  transition: none;
+  opacity: 0;
+}
+.reveal .headshot img {
+  border-radius: 50%;
+  border: 4px solid #c00 !important;
+}
+.reveal .condensed {
+  letter-spacing: 0.02em;
+}
+.reveal .condensed li {
+  margin-bottom: 1em ;
+}
+.reveal .has-light-background .sl-block .has-dark-background > svg.redhat-logo .logotext {
+  fill: #ffffff !important;
+}
+.reveal .has-light-background .sl-block .reversed.redhat-logo .logotext,
+.reveal .has-light-background .sl-block .reversed .redhat-logo .logotext,
+.reveal .has-light-background .sl-block .has-dark-background > .redhat-logo .logotext {
+  fill: #ffffff !important;
+}
+.reveal .has-dark-background .sl-block .reversed.redhat-logo .logotext,
+.reveal .has-dark-background .sl-block .reversed .redhat-logo .logotext,
+.reveal .has-dark-background .sl-block .has-light-background > .redhat-logo .logotext {
+  fill: #000000 !important;
+}
+.reveal .has-dark-background .has-light-background .logo .only-dark path,
+.reveal .has-light-background .mono.redhat-logo path {
+  fill: #000000 !important;
+}
+.reveal .has-dark-background .mono.redhat-logo path {
+  fill: #ffffff;
+}
+.reveal .has-dark-background .logo .only-dark {
+  display: block;
+}
+.reveal .has-light-background .logo .only-light {
+  display: block;
+}
+.reveal .has-light-background .logo .only-dark {
+  display: none;
+}
+.reveal .has-dark-background .logo .only-light {
+  display: none;
+}
+.reveal .has-light-background .reversed svg path {
+  fill: #ffffff !important;
+}
+.reveal .has-dark-background .reversed svg path {
+  fill: currentcolor;
+}
+.reveal .has-dark-background .has-light-background .logo .only-light,
+.reveal .has-dark-background .reversed .logo .only-dark {
+  display: block;
+}
+.reveal .has-light-background .has-dark-background .logo .only-dark,
+.reveal .has-light-background .logo .only-light {
+  display: block;
+}
+.reveal .has-light-background .has-dark-background .redhat-logo .only-dark,
+.reveal .has-light-background .redhat-logo .only-light {
+  fill: #ffffff !important;
+}
+.reveal .has-light-background .has-dark-background .logo .only-light,
+.reveal .has-light-background .logo .only-dark,
+.reveal .has-dark-background .has-light-background .logo .only-dark,
+.reveal .has-dark-background .logo .only-light {
+  display: none;
+}
+.reveal .future .fade-up,
+.reveal .future .fade-down,
+.reveal .future .fade-left,
+.reveal .future .fade-right,
+.reveal .future .fade-zoom {
+  -webkit-transition: none;
+  transition: none;
+  opacity: 0;
+  filter: alpha(opacity=0);
+}
+.reveal .future .fade-up,
+.reveal .fade-up.fragment {
+  -webkit-transform: translate(0, 2em);
+  -ms-transform: translate(0, 2em);
+  transform: translate(0, 2em);
+  opacity: 0;
+  filter: alpha(opacity=0);
+}
+.reveal .future .fade-down,
+.reveal .fade-down.fragment {
+  -webkit-transform: translate(0, -2em);
+  -ms-transform: translate(0, -2em);
+  transform: translate(0, -2em);
+  opacity: 0;
+  filter: alpha(opacity=0);
+}
+.reveal .future .fade-left,
+.reveal .fade-left.fragment {
+  -webkit-transform: translate(2em, 0);
+  -ms-transform: translate(2em, 0);
+  transform: translate(2em, 0);
+  opacity: 0;
+  filter: alpha(opacity=0);
+}
+.reveal .future .fade-right,
+.reveal .fade-right.fragment {
+  -webkit-transform: translate(-2em, 0);
+  -ms-transform: translate(-2em, 0);
+  transform: translate(-2em, 0);
+  opacity: 0;
+  filter: alpha(opacity=0);
+}
+.reveal .future .fade-zoom,
+.reveal .fade-zoom.fragment {
+  -webkit-transform: scale(0.1);
+  -ms-transform: scale(0.1);
+  transform: scale(0.1);
+  opacity: 0;
+  filter: alpha(opacity=0);
+}
+.reveal .future .fade-in {
+  transition: none;
+  opacity: 0;
+}
+.reveal .present .fade-in,
+.reveal .present .fade-up,
+.reveal .present .fade-down,
+.reveal .present .fade-left,
+.reveal .present .fade-right,
+.reveal .present .fade-zoom {
+  -webkit-transition: all .5s ease .5s;
+  transition: all .5s ease .5s;
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
+.reveal .present .fragment.visible.fade-up,
+.reveal .present .fragment.visible.fade-down,
+.reveal .present .fragment.visible.fade-left,
+.reveal .present .fragment.visible.fade-right,
+.reveal .present .fragment.visible.fade-zoom {
+  -webkit-transform: none ;
+  -ms-transform: none ;
+  transform: none ;
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
+.reveal .sl-block {
+  font-family: "Overpass 2", "Hiragino Kaku Gothic", "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ Pro W3", Overpass, sans-serif !important;
+}
+.reveal .has-light-background .icon.stroked {
+  color: currentcolor;
+}
+.reveal .has-dark-background .icon.stroked path {
+  stroke: currentcolor;
+}
+.reveal .has-dark-background .only-light-background {
+  display: none !important;
+}
+.reveal .has-dark-background .only-dark-background {
+  display: block !important;
+}
+.reveal a.call-to-action:hover {
+  background-color: #d00 !important;
+  box-shadow: 0 0.5em 1em rgba(0, 0, 0, 0.05) !important;
+  text-shadow: none !important;
+}
+.reveal .sl-block[data-block-type="snippet"] table {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+.reveal .sl-block[data-block-type="snippet"] table td {
+  border-color: currentcolor !important;
+}
+.reveal .sl-block[data-block-type="snippet"] table td {
+  text-align: inherit !important;
+}
+.reveal .sl-block[data-block-type="text"] table {
+  width: 100%;
+}
+.reveal .sl-block[data-block-type="text"] table td {
+  border-color: currentcolor;
+}
+.reveal .sl-block[data-block-type="text"] table td {
+  text-align: inherit;
+}
+.reveal.reveal .sl-block[data-block-type="image"] .person {
+  border-radius: 50%;
+  position: relative !important;
+  background-color: transparent;
+  height: auto !important;
+}
+.reveal.reveal .sl-block[data-block-type="image"] .person:before {
+  content: "" !important;
+  display: block !important;
+  padding-top: 100% ;
+  position: relative !important ;
+  /* 4:3 aspect ratio */
+
+}
+.reveal.reveal .sl-block[data-block-type="image"] .person > img {
+  position: absolute ;
+  margin: 0 auto !important;
+  left: 0% ;
+  right: 0 ;
+  width: auto !important;
+  top: 0  ;
+  bottom: 0 ;
+}
+.reveal .present .delay-1 {
+  transition-delay: 0.1s;
+}
+.reveal .present .delay-2 {
+  transition-delay: 0.2s;
+}
+.reveal .present .delay-3 {
+  transition-delay: 0.3s;
+}
+.reveal .present .delay-4 {
+  transition-delay: 0.4s;
+}
+.reveal .present .delay-5 {
+  transition-delay: 0.5s;
+}
+.reveal .present .delay-6 {
+  transition-delay: 0.6s;
+}
+.reveal .present .delay-7 {
+  transition-delay: 0.7s;
+}
+.reveal .present .delay-8 {
+  transition-delay: 0.8s;
+}
+.reveal .present .delay-9 {
+  transition-delay: 0.9s;
+}
+.reveal .present .delay-10 {
+  transition-delay: 1s;
+}
+.reveal .present .delay-11 {
+  transition-delay: 1.1s;
+}
+.reveal .present .delay-12 {
+  transition-delay: 1.2s;
+}
+.reveal .present .delay-13 {
+  transition-delay: 1.3s;
+}
+.reveal .present .delay-14 {
+  transition-delay: 1.4s;
+}
+.reveal .present .delay-15 {
+  transition-delay: 1.5s;
+}
+.reveal .present .delay-16 {
+  transition-delay: 1.6s;
+}
+.reveal .present .delay-17 {
+  transition-delay: 1.7s;
+}
+.reveal .present .delay-18 {
+  transition-delay: 1.8s;
+}
+.reveal .present .delay-19 {
+  transition-delay: 1.9s;
+}
+.reveal .present .delay-20 {
+  transition-delay: 2s;
+}
+.reveal .present .delay-21 {
+  transition-delay: 2.1s;
+}
+.reveal .present .delay-22 {
+  transition-delay: 2.2s;
+}
+.reveal .present .delay-23 {
+  transition-delay: 2.3s;
+}
+.reveal .present .delay-24 {
+  transition-delay: 2.4s;
+}
+.reveal .present .delay-25 {
+  transition-delay: 2.5s;
+}
+.reveal .present .delay-26 {
+  transition-delay: 2.6s;
+}
+.reveal .present .delay-27 {
+  transition-delay: 2.7s;
+}
+.reveal .present .delay-28 {
+  transition-delay: 2.8s;
+}
+.reveal .present .delay-29 {
+  transition-delay: 2.9s;
+}
+.reveal .present .delay-30 {
+  transition-delay: 3s;
+}
+.reveal .present .delay-31 {
+  transition-delay: 3.1s;
+}
+.reveal .present .delay-32 {
+  transition-delay: 3.2s;
+}
+.reveal .present .delay-33 {
+  transition-delay: 3.3s;
+}
+.reveal .present .delay-34 {
+  transition-delay: 3.4s;
+}
+.reveal .present .delay-35 {
+  transition-delay: 3.5s;
+}
+.reveal .present .delay-36 {
+  transition-delay: 3.6s;
+}
+.reveal .present .delay-37 {
+  transition-delay: 3.7s;
+}
+.reveal .present .delay-38 {
+  transition-delay: 3.8s;
+}
+.reveal .present .delay-39 {
+  transition-delay: 3.9s;
+}
+.reveal .present .delay-40 {
+  transition-delay: 4s;
+}
+.reveal .light-foreground .sl-block * {
+  color: #fff;
+}
+.reveal .dark-foreground .sl-block * {
+  color: #000;
+}
+.reveal .has-dark-background .invert {
+  color: #000;
+}
+.reveal .has-light-background .invert * {
+  color: #fff ;
+}
+.reveal .has-light-background .invert .only-light-background {
+  display: none ;
+}
+.reveal .has-light-background .invert .only-dark-background {
+  display: block !important;
+}
+.reveal .has-dark-background .invert .only-light-background {
+  display: block !important ;
+}
+.reveal .has-dark-background .invert .only-dark-background {
+  display: none !important;
+}
+.reveal .slide-number {
+  position: absolute !important;
+  opacity: 1;
+  right: 1em;
+  height: 28px;
+  min-width: 28px;
+  bottom: auto;
+  left: auto;
+  text-align: center;
+  font-size: 14px;
+  border-radius: 28px;
+  line-height: 28px;
+  color: white;
+  text-shadow: 0 0.1em 0.5em rgba(0, 0, 0, 0.4);
+  top: 1em;
+  font-family: "Overpass 2", Overpass, sans-serif;
+  font-weight: 500;
+  white-space: nowrap;
+  padding: 4px;
+  box-sizing: content-box;
+}
+.reveal .slide-number-delimiter {
+  margin: 0 1px;
+}
+.reveal.reveal .present.in-3d-appear {
+  transform: translatez(0em) !important;
+  animation: none !important;
+  transition: transform 1s ease !important;
+}
+.reveal.reveal .future.in-3d-appear {
+  transform: translatez(10em) rotateX(21deg) !important;
+  animation: none !important;
+}
+.reveal .no-filter img,
+.reveal .no-filter {
+  filter: none !important;
+  -webkit-filter: none !important;
+}
+.reveal .present .fade-in-slow {
+  transition: all 5s ease;
+}
+.reveal .future .fade-in-slow {
+  transition: none;
+  opacity: 0;
+}
+.reveal .redhat-logo .logotext {
+  fill: #000000 !important;
+}
+.reveal .has-dark-background .redhat-logo .logotext {
+  fill: #ffffff !important;
+}
+.reveal [data-block-type="table"] .sl-block-content {
+  font-size: .75em;
+  background-color: #c00;
+  color: #fff;
+}
+.reveal [data-block-type="table"] td {
+  background-color: #e5e5e5;
+  color: #333;
+  border-color: white;
+}
+.reveal div[data-block-type="table"] th {
+  font-weight: 500;
+}
+.reveal [data-block-type="table"] tr:nth-child(odd) td {
+  background-color: #f5f5f5;
+  color: #333;
+}
+.reveal .has-dark-background > [data-block-type="table"] td {
+  background-color: #131619;
+  color: #fff;
+}
+.reveal .has-dark-background > [data-block-type="table"] tr:nth-child(odd) td {
+  background-color: #232629;
+  color: #fff;
+}
+.reveal [data-block-type="code"],
+.reveal .hljs {
+  background-color: white ;
+  color: rgba(55, 55, 55, 0.85) !important;
+}
+.reveal section .hljs {
+  background-color: white !important;
+}
+.reveal .has-dark-background [data-block-type="code"],
+.reveal .has-dark-background .hljs {
+  background-color: #012736!important ;
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+.reveal [data-block-type="code"] pre {
+  letter-spacing: 0.015em;
+  line-height: 1.5em;
+}
+.reveal .has-light-background[data-block-type="code"] pre,
+.reveal [data-block-type="code"] pre {
+  background-color: white ;
+  color: currentcolor;
+  padding: 1em !important;
+}
+.reveal .has-dark-background [data-block-type="code"] pre {
+  background-color: #012736 ;
+}
+.reveal .hljs,
+.reveal pre,
+.reveal code {
+  font-family: 'Overpass Mono', monospace !important;
+  font-weight: 200 !important;
+}
+.reveal .hljs-literal {
+  color: #ffb612 !important;
+}
+.reveal .hljs-keyword {
+  color: #ffb612;
+  font-weight: 700 !important;
+}
+.reveal .hljs-string {
+  color: #88c639;
+  font-weight: 700;
+}
+.reveal .hljs-comment {
+  color: #94a0a7 !important;
+  font-weight: 400 !important;
+}
+.reveal .hljs-params {
+  color: #028c98 ;
+  font-weight: 700;
+}
+.reveal .hljs-attr {
+  color: #EC7A08 !important;
+}
+.reveal .hljs-tag {
+  color: #7F5FAE !important;
+}
+.reveal .hljs-name {
+  color: #028c98 !important;
+}
+.reveal .hljs-string {
+  color: #7f5fae !important;
+}
+.reveal .hljs-comment {
+  color: rgba(125, 125, 125, 0.65) !important;
+}
+.reveal .hljs-number {
+  color: #4e9fdd !important;
+}
+.reveal .hljs-attribute {
+  color: #ec9e34 !important;
+}
+.reveal .hljs-variable {
+  color: #4e9fdd !important;
+}
+.reveal .hljs-built_in {
+  color: #ee1122!important;
+}
+.reveal .hljs-selector-class {
+  color: #55aab2 !important;
+}
+.reveal [data-line-end-type="line-arrow"] line,
+.reveal [data-line-start-type="line-arrow"] line,
+.reveal [data-line-end-type="line-arrow"] path {
+  stroke-linecap: round;
+  stroke-linejoin: square;
+}
+.reveal div[data-block-type="line"] line[stroke="#000000"],
+.reveal div[data-block-type="line"] path[stroke="#000000"] {
+  stroke: currentcolor;
+}
+.reveal [fill="none"] {
+  fill: none !important;
+}
+.reveal [fill="#a30000"] {
+  fill: #aa0000 !important;
+}
+.reveal [fill="#cc2029"],
+.reveal [fill="#cb2027"],
+.reveal [fill="#c00"] {
+  fill: #cc0000 !important;
+}
+.reveal [fill="#fff"] {
+  fill: #ffffff !important;
+}
+.reveal [fill="#6d6e70"] {
+  fill: #6d6e70 !important;
+}
+.reveal [fill="#231f20"] {
+  fill: currentcolor !important;
+}
+.reveal [fill="#efab1f"] {
+  fill: #efab1f !important;
+}
+.reveal [fill="#92d400"] {
+  fill: #92d400 !important;
+}
+.reveal .has-dark-background [fill="#6d6e70"] {
+  fill: #266272 !important;
+}
+.reveal .has-dark-background [fill="#fff"] {
+  fill: #555555 !important;
+}
+.reveal .has-dark-background [fill="#fff"] {
+  fill: #333333 !important;
+}
+.reveal .has-dark-background [stroke="#231f20"] {
+  stroke: currentcolor;
+}
+.reveal .has-dark-background [fill="#221F1F"],
+.reveal .has-dark-background [fill="#221f1f"],
+.reveal .has-dark-background [fill="#231F20"],
+.reveal .has-dark-background [fill="#010101"] {
+  fill: #ffffff !important;
+}
+.reveal [data-inline-svg="true"] img {
+  display: none;
+}
+
+		</style>
+
+	</head>
+	<body class="reveal-viewport theme-font-overpass2 theme-color-no-color">
+		<div class="reveal">
+			<div class="slides">
+				<section data-id="5ef1897a2175a2df36e7ce8ac9d5d8fc"><div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 250px; height: auto;" data-block-id="a006e4f669d16858b3d2e3b131b13954"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 11;">
+<h1><span style="color:#ffffff"><span style="font-size:0.9em">Anatomy of an openstack distribution</span></span></h1>
+</div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 199.63px; height: 70px; left: 720px; top: 88px;" data-block-id="1855594a5acbbdf15a638b8ea0fe2e5d"><div class="sl-block-content" style="z-index: 12;"><img style="" data-natural-width="154" data-natural-height="54" data-src="anatomy-of-an-openstack-distribution/3157550-rdo-logo-white.png"></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 80px; top: 490px;" data-block-id="4910e12c4731eb5531c02b8d08046bf3"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;">
+<h3><span style="color:#ffffff">JAVIER PEÑA</span></h3>
+
+<h3><span style="color:#ffffff">January 2017</span></h3>
+</div></div></section><section class="has-dark-background" data-background-color="#013746" data-background-image="anatomy-of-an-openstack-distribution/1748213-drawing2.svg" data-id="28d93dd16aa6c3b599b2eb06c411c500"><div class="sl-block" data-block-type="text" style="height: auto; width: 915px; left: 45px; top: 70px;" data-block-id="3fed076493966041bde066312d1f1be3"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; text-align: left;">
+<h1 style="text-align:center">$ whoami</h1>
+
+<h2 style="text-align:center"> </h2>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+
+<p style="text-align:center"><span style="font-size:1.4em">Javier Peña &lt;jpena@redhat.com&gt;</span></p>
+
+<p style="text-align:center"><span style="font-size:1.4em">@fj_pena (Twitter), jpena (Freenode)</span></p>
+
+<p style="text-align:center"><span style="font-size:1.4em">Senior Software Engineer @ RDO Team</span></p>
+</div></div></section><section class="has-dark-background" data-background-color="#013746" data-background-image="anatomy-of-an-openstack-distribution/1748213-drawing2.svg" data-id="2448e29ff8e1e4c10c2e91d90d1a21b3"><div class="sl-block" data-block-type="text" style="height: auto; width: 915px; left: 45px; top: 70px;" data-block-id="0c1bd7f13a3dfc7ee6f568a5f8eae695"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; text-align: left;">
+<h1 style="text-align:center">AGENDA</h1>
+
+<p style="text-align:center"> </p>
+
+<p style="text-align:center"> </p>
+
+<p style="text-align:center"> </p>
+
+<ol>
+	<li>
+	<p><span style="font-size:1.6em">Why do you need an OpenStack distribution</span></p>
+	</li>
+	<li>
+	<p><span style="font-size:1.6em">What is RDO?</span></p>
+	</li>
+	<li>
+	<p><span style="font-size:1.6em">Creating RDO: packaging</span></p>
+	</li>
+	<li>
+	<p><span style="font-size:1.6em">Creating RDO: CI</span></p>
+	</li>
+	<li>
+	<p><span style="font-size:1.6em">Contributing to RDO</span></p>
+	</li>
+</ol>
+</div></div></section><section class="has-dark-background" data-background-color="#013746" data-background-image="anatomy-of-an-openstack-distribution/1748213-drawing2.svg" data-id="4e42e1d4d58f58ef76b951d849e05b34"><div class="sl-block" data-block-type="text" style="height: auto; width: 915px; left: 45px; top: 71px;" data-block-id="cc2c34773f476631a3a4932208cc12b0"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; text-align: left;" dir="ui">
+<h1 style="text-align:center">Some context</h1>
+
+<p> </p>
+
+<ul>
+	<li>
+<span style="font-size:1.6em">The OpenStack Newton release included</span>
+
+	<ul>
+		<li><span style="font-size:1.6em">32 service projects</span></li>
+		<li><span style="font-size:1.6em">75 library projects</span></li>
+		<li><span style="font-size:1.6em">16 Horizon plug-ins</span></li>
+		<li><span style="font-size:1.6em">65 "other" projects</span></li>
+	</ul>
+	</li>
+	<li><span style="font-size:1.6em">354 libraries  used by the projects</span></li>
+	<li><span style="font-size:1.6em">More than 200 repositories are active each month (*)</span></li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 45px; top: 630px;" data-block-id="df263d40a57cfe5ce07b0fe3dc784fe3"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<p>(*) http://activity.openstack.org/dash/browser/scm-repos.html</p>
+</div></div></section><section class="has-dark-background" data-background-color="#013746" data-background-image="anatomy-of-an-openstack-distribution/1748213-drawing2.svg" data-id="7f6b1860bd7b8d9968b510ccc7b11dd6"><div class="sl-block" data-block-type="text" style="height: auto; width: 874px; left: 45px; top: 70px;" data-block-id="b660fa02572f35ba13accb75862316a2"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; text-align: left;">
+<h1>HOW CAN WE MANAGE THIS?</h1>
+
+<p> </p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 435px; left: 45px; top: 202px;" data-block-id="f17fcc91b574678b667129e1f96365e6"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<ul>
+	<li><span style="font-size:1.4em">Getting everything integrated with your base OS</span></li>
+	<li><span style="font-size:1.4em">Interactions between different pieces</span></li>
+	<li><span style="font-size:1.4em">OpenStack vs non-OpenStack components</span></li>
+	<li>
+<span style="font-size:1.4em">Getting the right versions of everything</span>
+	<ul>
+		<li><span style="font-size:1.4em">and getting updates!</span></li>
+	</ul>
+	</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 445.152px; height: 297px; left: 498px; top: 223px;" data-block-id="dafdd9ee50de070e3f3e8b6a4b8e5dfa"><div class="sl-block-content" style="z-index: 13;"><img style="" data-natural-width="640" data-natural-height="427" data-src="anatomy-of-an-openstack-distribution/3280304-cable_mess.jpg"></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 880px; left: 58px; top: 670px;" data-block-id="8eba3f77a2b4752bce1e254f419c4552"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14;">
+<p><span style="font-size:0.9em">Image from https://www.flickr.com/photos/baccharus/5817342671/in/photostream/, licensed with CC BY 2.0</span></p>
+</div></div></section><section class="has-dark-background" data-id="0842e873f07eceb262d7cae2fc6ffa2a" data-background-image="anatomy-of-an-openstack-distribution/1600736-corporate-9.svg" data-background-color="rgb(156,0,0)"><div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 160px; height: 56.1039px; left: 400px; top: 84px;" data-block-id="2e121cea8668d0e56acc67a7639918ca"><div class="sl-block-content" style="z-index: 11;"><img style="" data-natural-width="154" data-natural-height="54" data-src="anatomy-of-an-openstack-distribution/3157550-rdo-logo-white.png"></div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 640px; height: 452.474px; left: 160px; top: 177.526px;" data-block-id="761da2f8ad59d3b326bf2ee5f721d80e"><div class="sl-block-content" style="z-index: 12;"><img style="" data-natural-width="1273" data-natural-height="900" data-src="anatomy-of-an-openstack-distribution/3280248-rdo-words-shirt-front-300dpi.png"></div></div></section><section class="has-dark-background" data-background-color="#013746" data-background-image="anatomy-of-an-openstack-distribution/1748205-drawing.svg" data-id="c78ff6687aa0f8c8b446e6a53f4cb6df"><div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 436px; left: 262px; top: 70px;" data-block-id="eeb6f9f632659a729db2276b76ff284d"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;">
+<h1>What is RDO?</h1>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 800px; left: 80px; top: 210px;" data-block-id="3113e36b57132ecf348a1dea83daf23d"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<ul>
+	<li><span style="font-size:1.4em">"RDO is a community of people using and deploying OpenStack on CentOS, Fedora, and Red Hat Enterprise Linux." (*)</span></li>
+	<li><span style="font-size:1.4em">RDO is an OpenStack distribution for RPM-based operating systems</span></li>
+	<li><span style="font-size:1.4em">Based on vanilla OpenStack code, no "secret sauce" added</span></li>
+	<li><span style="font-size:1.4em">Integrated and tested on CentOS and Red Hat Enterprise Linux</span></li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 80px; top: 623px;" data-block-id="8903cb9abdb9d5b6e0786980add77ba0"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;">
+<p>(*) http://www.rdoproject.org</p>
+</div></div></section><section class="has-dark-background" data-background-color="#013746" data-background-image="anatomy-of-an-openstack-distribution/1748205-drawing.svg" data-id="51c554480a5e4035895b12b99adc2a6b"><div class="sl-block" data-block-type="text" style="height: auto; width: 581px; left: 212px; top: 70px;" data-block-id="df3d840773fbe38f6f18382128a66601"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;">
+<h1>What makes RDO</h1>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 480px; left: 80px; top: 210px;" data-block-id="d3f77fd59cd443a3b5094acccaa3f587"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<ul>
+	<li>
+<span style="font-size:1.4em">A set of repositories with RPM packages</span>
+	<ul>
+		<li><span style="font-size:1.4em">Tested to integrate with each other</span></li>
+		<li><span style="font-size:1.4em">Tested to integrate with CentOS / Red Hat Enterprise Linux</span></li>
+	</ul>
+	</li>
+	<li>
+<span style="font-size:1.4em">Installers</span>
+	<ul>
+		<li><span style="font-size:1.4em">TripleO</span></li>
+		<li><span style="font-size:1.4em">Packstack</span></li>
+	</ul>
+	</li>
+	<li><span style="font-size:1.4em">A community of people who develop, deploy and use the distribution</span></li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 386px; height: 329.68px; left: 574px; top: 230.32px;" data-block-id="bfd62ef8ba92d5c76aaa68c0480e53b9"><div class="sl-block-content" style="z-index: 14;"><img style="" data-natural-width="843" data-natural-height="720" data-src="anatomy-of-an-openstack-distribution/3280370-cooking_a_distro.png"></div></div></section><section class="has-dark-background" data-background-color="#002a38" data-id="ac8aa17080f433f0c25629aafe7703c6">
+
+
+<div class="sl-block" data-block-type="text" style="height: auto; width: 945px; left: 15px; top: 71px;" data-block-id="f91dd02cb6698987bad4478670d2d1fc"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; text-align: left;" data-has-custom-html="">
+<h1 style="text-align: center;">Packaging IN RDO</h1>
+</div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 403.114px; height: 448px; left: 39px; top: 182px;" data-block-id="f5f8a48f4710581d5bdbaef0fe6d6566"><div class="sl-block-content" style="z-index: 12;"><img style="" data-natural-width="467" data-natural-height="519" data-src="anatomy-of-an-openstack-distribution/3294587-novaclient-reqs.png"></div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 359.673px; height: 448px; left: 560px; top: 182px;" data-block-id="3e8fd61d1a89d73dbe954ace20e18510"><div class="sl-block-content" style="z-index: 13;"><img style="" data-natural-width="452" data-natural-height="563" data-src="anatomy-of-an-openstack-distribution/3294592-novaclient-rpm-reqs.png"></div></div>
+<div class="sl-block" data-block-type="shape" style="min-width: 4px; min-height: 4px; width: 101px; height: 55px; left: 452px; top: 379px;" data-block-id="49dbab978e1ac1f6c7b11f1d7cc91956"><div class="sl-block-content" data-shape-type="arrow-right" data-shape-fill-color="rgb(207, 230, 143)" data-shape-stretch="true" style="z-index: 14;" data-shape-stroke-color="#000000" data-shape-stroke-width="1"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 101 55"><defs><clippath id="shape-mask-1-1482491155405"><polygon points="0,16.5 50.5,16.5 50.5,0 101,27.5 50.5,55 50.5,38.5 0,38.5"></polygon></clippath></defs><polygon points="0,16.5 50.5,16.5 50.5,0 101,27.5 50.5,55 50.5,38.5 0,38.5" clip-path="url(#shape-mask-1-1482491155405)" class="shape-element" fill="rgb(207, 230, 143)" stroke="#000000" stroke-width="2"></polygon></svg></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 180px; top: 335px;" data-block-id="19ec8637a7c6670d91def0ec6c76313e"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 15;"><p>Text</p></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 400px; left: 540px; top: 641px;" data-block-id="0b10859ce35554fdeedf258919b3f150"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 16;">
+<p><span style="font-size:1.2em">+ list files and some other metadata</span></p>
+</div></div></section><section class="has-dark-background" data-background-color="#002a38" data-id="24ab780325ed3aee9fa26b972838e6d2">
+
+
+<div class="sl-block" data-block-type="text" style="height: auto; width: 945px; left: 15px; top: 71px;" data-block-id="c2d3d4bd1f3bc8455debee587b3625f5"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 10; text-align: left;" data-has-custom-html="" dir="ui">
+<h1 style="text-align: center;">EASY?</h1>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 80px; top: 210px;" data-block-id="65919c2725cc473a3b5da6322c156e87"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;">
+<ul>
+	<li><span style="font-size:1.6em">New dependencies coming often</span></li>
+	<li><span style="font-size:1.6em">New files created by projects</span></li>
+	<li><span style="font-size:1.6em">New projects</span></li>
+	<li>
+<span style="font-size:1.6em">This grows fast!</span>
+	<ul>
+		<li><span style="font-size:1.6em">140 packages in RDO Mitaka</span></li>
+		<li><span style="font-size:1.6em">235 packages in RDO Newton</span></li>
+	</ul>
+	</li>
+</ul>
+</div></div></section><section class="has-dark-background" data-background-color="#002a38" data-id="e9c4d9c27eaf50a7d4301b7305326e56">
+
+
+<div class="sl-block" data-block-type="text" style="height: auto; width: 945px; left: 15px; top: 71px;" data-block-id="4ea58becbd835bd57402ce9d92824a9b"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; text-align: left;" data-has-custom-html="" dir="ui">
+<h1 style="text-align: center;">The RDO APPROACH</h1>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 389px; left: 31px; top: 210px;" data-block-id="edb4907fa0b88791e35c1a6cab6643d3"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<p style="text-align:center"><span style="font-size:1.6em"><strong>Continuous packaging</strong></span></p>
+
+<p style="text-align:center"> </p>
+
+<ul>
+	<li><span style="font-size:1.4em">Allow tools that use packages to evolve during the cycle rather than waiting till  the end</span></li>
+	<li><span style="font-size:1.4em">Reduce the delta between versions, allowing faster time to market when a release is complete</span></li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 480px; height: 399px; left: 480px; top: 210px;" data-block-id="2f3677da5c98493278eddcad8b412bc4"><div class="sl-block-content" style="z-index: 13;"><img style="" data-natural-width="447" data-natural-height="372" data-src="anatomy-of-an-openstack-distribution/3360191-rdo_continuous_packaging.jpg"></div></div></section><section class="has-dark-background" data-background-color="#002a38" data-id="90d81dc91801d1a97acada1a32df7df5">
+
+
+<div class="sl-block" data-block-type="text" style="height: auto; width: 945px; left: 12px; top: 70px;" data-block-id="b0b4210929f89b01cf153d5f667fc8db"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 10; text-align: left;" data-has-custom-html="">
+<h1 style="text-align: center;">High level packaging flow</h1>
+</div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 78.4521px; height: 83px; left: 872px; top: 368px;" data-block-id="a5976a7942971b0891b99bdffb3420c0"><div class="sl-block-content" style="z-index: 18; border-width: 1px;" data-inline-svg="true">
+<img style="" data-natural-width="69" data-natural-height="73" data-src="anatomy-of-an-openstack-distribution/2838684-Icon_RH_Shape_Tick-Check_RGB_Flat-2.svg"><svg width="69.388" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 69.388185 73" height="73" preserveaspectratio="xMidYMid meet">
+ <path d="m29.262 65c-1.801 0-4.102-1.2-5.2-2.7l-15.198-19.401c-1.3-1.597-1.101-4.199 0.399-5.597l2.101-2.102c0.7-0.699 1.598-1.097 2.598-1.097 1.101 0 2.101 0.5 2.8 1.296l10.802 13.101c0.597 0.7 1.3 0.602 1.699-0.102l22.8-38.5c0.7-1.199 2-1.898 3.399-1.898 0.7 0 1.402 0.2 2 0.5l2 1.2c1.8 1.1 2.5 3.5 1.402 5.3l-26.602 47c-1 1.7-3.2 3-5 3zm-15.399-28.898c-0.402 0-0.902 0.199-1.203 0.5l-2 2c-0.797 0.796-0.898 2.097-0.2 3l15.102 19.5c0.801 1 2.5 1.898 3.7 1.898 1.101 0 2.601-0.898 3.199-2l26.602-47c0.597-0.898 0.199-2-0.7-2.602l-2-1.199c-0.902-0.5-2.101-0.199-2.601 0.7l-22.899 38.5c-0.601 1-1.601 1.601-2.601 1.601-0.899 0-1.7-0.398-2.399-1.2l-10.703-13.1c-0.297-0.4-0.797-0.598-1.297-0.598z"></path>
+</svg>
+</div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 166px; height: 166px; left: 0px; top: 395px;" data-block-id="633d8c626d2d807bbf11d8a5dc6b2a2a"><div class="sl-block-content" style="z-index: 11;" data-inline-svg="true">
+<img style="" data-natural-width="144" data-natural-height="144" data-src="anatomy-of-an-openstack-distribution/1273619-document.svg"><svg xmlns="http://www.w3.org/2000/svg" width="144" height="144" viewbox="0 0 144 144" class="icon stroked icon-document" preserveaspectratio="xMidYMid meet"> <path fill="none" stroke="#666" stroke-width="2px" class="long" d="m 47.95,38.85 36.54,0.22 11.8,11.79 0,54.34 -48.34,0 0,-66.35 z"></path><path fill="none" stroke="#666" stroke-width="2px" class="short" d="m 96.29,50.86 -11.69,0 -0.11,-11.79 m -28.69,52.71 31.7,0 m -31.7,-7.8 25.46,0 m -25.46,-7.8 31.7,0 m -31.7,-7.8 25.46,0 m -25.46,-7.8 31.7,0"></path></svg>
+</div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 196px; height: 196px; left: 210px; top: 371px;" data-block-id="b8718a990d1ba7e2d1d90ef1f026eda2"><div class="sl-block-content" style="z-index: 12;" data-inline-svg="true">
+<img style="" data-natural-width="144" data-natural-height="144" data-src="anatomy-of-an-openstack-distribution/1273594-box-open.svg"><svg xmlns="http://www.w3.org/2000/svg" width="144" height="144" viewbox="0 0 144 144" class="icon stroked icon-box-open " preserveaspectratio="xMidYMid meet"><path fill="none" stroke="#666" stroke-width="2px" class="long" d="m 73.09,73.45 0.1,39.45 m -32.63,-37.91 0,22.71 32.63,15.2 30.91,-16.1 -0.3,-30.85 M 72.26,41.77 58.42,39.79 27.04,56.37 40.76,57.59 34.56,72.31 66.58,87.49 73.09,73.45 85.46,75.5 116.7,59.68 103.7,57.2 114.4,45.91 83.17,30.48 z m 0,0 -31.5,15.82 32.33,15.86 30.61,-16.25 z"></path><path fill="none" stroke="#666" stroke-width="2px" class="short" d="m 69.34,106.6 0,-14.74 m 19.94,8.84 11.12,-6.04 0,-9.64 M 86.94,49.47 56.59,65.19"></path></svg>
+</div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 181.472px; height: 139px; left: 484px; top: 409px;" data-block-id="f0f1bd31b18dfde71eb40b8283a98777"><div class="sl-block-content" style="z-index: 13;" data-inline-svg="true">
+<img style="" data-natural-width="188" data-natural-height="144" data-src="anatomy-of-an-openstack-distribution/1273588-bank.svg"><svg xmlns="http://www.w3.org/2000/svg" width="188" height="144" viewbox="0 0 188 144" class="icon stroked icon-wideload icon-storage-bank " preserveaspectratio="xMidYMid meet"><path fill="none" stroke="#666" stroke-width="2px" class="long" d="m 15.78,42.75 c 0,-3.75 11.66,-6.79 26.03,-6.79 14.36,0 26.02,3.04 26.02,6.79 m -3.25,18.7 c 2.45,0.55 3.32,1.82 3.32,2.73 l 0,15.01 c 0,3.8 -11.63,6.8 -26.09,6.8 -14.45,0 -26.08,-3 -26.08,-6.8 l 0,-15.01 c 0,-0.91 0.87,-2.18 3.32,-2.73 m 45.53,21.08 c 2.45,0.55 3.32,1.82 3.32,2.73 l 0,15.04 c 0,3.8 -11.63,6.8 -26.09,6.8 -14.45,0 -26.08,-3 -26.08,-6.8 l 0,-15.04 c 0,-0.91 0.87,-2.18 3.32,-2.73 m 48.85,-39.62 0,15.04 c 0,3.8 -11.63,6.8 -26.09,6.8 -14.45,0 -26.08,-3 -26.08,-6.8 l 0,-15.04 M 120.2,42.75 c 0,-3.75 11.6,-6.79 26,-6.79 14.3,0 26,3.04 26,6.79 m -3.2,18.7 c 2.4,0.55 3.3,1.82 3.3,2.73 l 0,15.01 c 0,3.8 -11.7,6.8 -26.1,6.8 -14.5,0 -26.1,-3 -26.1,-6.8 l 0,-15.01 c 0,-0.91 0.9,-2.18 3.3,-2.73 M 169,82.53 c 2.4,0.55 3.3,1.82 3.3,2.73 l 0,15.04 c 0,3.8 -11.7,6.8 -26.1,6.8 -14.5,0 -26.1,-3 -26.1,-6.8 l 0,-15.04 c 0,-0.91 0.9,-2.18 3.3,-2.73 m 48.9,-39.62 0,15.04 c 0,3.8 -11.7,6.8 -26.1,6.8 -14.5,0 -26.1,-3 -26.1,-6.8 l 0,-15.04 M 67.96,42.75 c 0,-3.75 11.66,-6.79 26.03,-6.79 14.31,0 26.01,3.04 26.01,6.79 m -3.2,18.7 c 2.4,0.55 3.3,1.82 3.3,2.73 l 0,15.01 c 0,3.8 -11.7,6.8 -26.11,6.8 -14.45,0 -26.08,-3 -26.08,-6.8 l 0,-15.01 c 0,-0.91 0.87,-2.18 3.32,-2.73 m 45.57,21.08 c 2.4,0.55 3.3,1.82 3.3,2.73 l 0,15.04 c 0,3.8 -11.7,6.8 -26.11,6.8 -14.45,0 -26.08,-3 -26.08,-6.8 l 0,-15.04 c 0,-0.91 0.87,-2.18 3.32,-2.73 m 48.87,-39.62 0,15.04 c 0,3.8 -11.7,6.8 -26.11,6.8 -14.45,0 -26.08,-3 -26.08,-6.8 l 0,-15.04"></path><path fill="none" stroke="#666" stroke-width="2px" class="short" d="m 27.13,48.25 c -3.17,-0.56 -5.84,-1.3 -7.8,-2.16 m 44.13,0.54 c -10.32,2.86 -19.89,3.02 -29.79,2.4 m 97.83,-0.78 c -3.2,-0.56 -5.8,-1.3 -7.8,-2.16 m 44.1,0.54 c -10.3,2.86 -19.9,3.02 -29.8,2.4 M 79.31,48.25 c -3.17,-0.56 -5.84,-1.3 -7.8,-2.16 m 44.09,0.54 c -10.3,2.86 -19.85,3.02 -29.75,2.4 M 27.13,68.34 c -3.17,-0.56 -5.84,-1.3 -7.8,-2.16 m 44.13,0.54 c -10.32,2.86 -19.89,3.02 -29.79,2.4 m -6.54,20.63 c -3.17,-0.56 -5.84,-1.3 -7.8,-2.16 m 44.13,0.54 c -10.32,2.86 -19.89,3.02 -29.79,2.4 M 131.5,68.34 c -3.2,-0.56 -5.8,-1.3 -7.8,-2.16 m 44.1,0.54 c -10.3,2.86 -19.9,3.02 -29.8,2.4 m -6.5,20.63 c -3.2,-0.56 -5.8,-1.3 -7.8,-2.16 m 44.1,0.54 c -10.3,2.86 -19.9,3.02 -29.8,2.4 M 79.31,68.34 c -3.17,-0.56 -5.84,-1.3 -7.8,-2.16 m 44.09,0.54 c -10.3,2.86 -19.85,3.02 -29.75,2.4 m -6.54,20.63 c -3.17,-0.56 -5.84,-1.3 -7.8,-2.16 m 44.09,0.54 c -10.3,2.86 -19.85,3.02 -29.75,2.4"></path></svg>
+</div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 181.472px; height: 139px; left: 769px; top: 408px;" data-block-id="a43da20f80d353ccaefefc695c4bef4d"><div class="sl-block-content" style="z-index: 14;" data-inline-svg="true">
+<img style="" data-natural-width="188" data-natural-height="144" data-src="anatomy-of-an-openstack-distribution/1273588-bank.svg"><svg xmlns="http://www.w3.org/2000/svg" width="188" height="144" viewbox="0 0 188 144" class="icon stroked icon-wideload icon-storage-bank " preserveaspectratio="xMidYMid meet"><path fill="none" stroke="#666" stroke-width="2px" class="long" d="m 15.78,42.75 c 0,-3.75 11.66,-6.79 26.03,-6.79 14.36,0 26.02,3.04 26.02,6.79 m -3.25,18.7 c 2.45,0.55 3.32,1.82 3.32,2.73 l 0,15.01 c 0,3.8 -11.63,6.8 -26.09,6.8 -14.45,0 -26.08,-3 -26.08,-6.8 l 0,-15.01 c 0,-0.91 0.87,-2.18 3.32,-2.73 m 45.53,21.08 c 2.45,0.55 3.32,1.82 3.32,2.73 l 0,15.04 c 0,3.8 -11.63,6.8 -26.09,6.8 -14.45,0 -26.08,-3 -26.08,-6.8 l 0,-15.04 c 0,-0.91 0.87,-2.18 3.32,-2.73 m 48.85,-39.62 0,15.04 c 0,3.8 -11.63,6.8 -26.09,6.8 -14.45,0 -26.08,-3 -26.08,-6.8 l 0,-15.04 M 120.2,42.75 c 0,-3.75 11.6,-6.79 26,-6.79 14.3,0 26,3.04 26,6.79 m -3.2,18.7 c 2.4,0.55 3.3,1.82 3.3,2.73 l 0,15.01 c 0,3.8 -11.7,6.8 -26.1,6.8 -14.5,0 -26.1,-3 -26.1,-6.8 l 0,-15.01 c 0,-0.91 0.9,-2.18 3.3,-2.73 M 169,82.53 c 2.4,0.55 3.3,1.82 3.3,2.73 l 0,15.04 c 0,3.8 -11.7,6.8 -26.1,6.8 -14.5,0 -26.1,-3 -26.1,-6.8 l 0,-15.04 c 0,-0.91 0.9,-2.18 3.3,-2.73 m 48.9,-39.62 0,15.04 c 0,3.8 -11.7,6.8 -26.1,6.8 -14.5,0 -26.1,-3 -26.1,-6.8 l 0,-15.04 M 67.96,42.75 c 0,-3.75 11.66,-6.79 26.03,-6.79 14.31,0 26.01,3.04 26.01,6.79 m -3.2,18.7 c 2.4,0.55 3.3,1.82 3.3,2.73 l 0,15.01 c 0,3.8 -11.7,6.8 -26.11,6.8 -14.45,0 -26.08,-3 -26.08,-6.8 l 0,-15.01 c 0,-0.91 0.87,-2.18 3.32,-2.73 m 45.57,21.08 c 2.4,0.55 3.3,1.82 3.3,2.73 l 0,15.04 c 0,3.8 -11.7,6.8 -26.11,6.8 -14.45,0 -26.08,-3 -26.08,-6.8 l 0,-15.04 c 0,-0.91 0.87,-2.18 3.32,-2.73 m 48.87,-39.62 0,15.04 c 0,3.8 -11.7,6.8 -26.11,6.8 -14.45,0 -26.08,-3 -26.08,-6.8 l 0,-15.04"></path><path fill="none" stroke="#666" stroke-width="2px" class="short" d="m 27.13,48.25 c -3.17,-0.56 -5.84,-1.3 -7.8,-2.16 m 44.13,0.54 c -10.32,2.86 -19.89,3.02 -29.79,2.4 m 97.83,-0.78 c -3.2,-0.56 -5.8,-1.3 -7.8,-2.16 m 44.1,0.54 c -10.3,2.86 -19.9,3.02 -29.8,2.4 M 79.31,48.25 c -3.17,-0.56 -5.84,-1.3 -7.8,-2.16 m 44.09,0.54 c -10.3,2.86 -19.85,3.02 -29.75,2.4 M 27.13,68.34 c -3.17,-0.56 -5.84,-1.3 -7.8,-2.16 m 44.13,0.54 c -10.32,2.86 -19.89,3.02 -29.79,2.4 m -6.54,20.63 c -3.17,-0.56 -5.84,-1.3 -7.8,-2.16 m 44.13,0.54 c -10.32,2.86 -19.89,3.02 -29.79,2.4 M 131.5,68.34 c -3.2,-0.56 -5.8,-1.3 -7.8,-2.16 m 44.1,0.54 c -10.3,2.86 -19.9,3.02 -29.8,2.4 m -6.5,20.63 c -3.2,-0.56 -5.8,-1.3 -7.8,-2.16 m 44.1,0.54 c -10.3,2.86 -19.9,3.02 -29.8,2.4 M 79.31,68.34 c -3.17,-0.56 -5.84,-1.3 -7.8,-2.16 m 44.09,0.54 c -10.3,2.86 -19.85,3.02 -29.75,2.4 m -6.54,20.63 c -3.17,-0.56 -5.84,-1.3 -7.8,-2.16 m 44.09,0.54 c -10.3,2.86 -19.85,3.02 -29.75,2.4"></path></svg>
+</div></div>
+<div class="sl-block" data-block-type="shape" style="min-width: 4px; min-height: 4px; width: 108px; height: 68px; left: 119px; top: 445px;" data-block-id="917efb9dc27404c1a5c6ac2d48a2dc73"><div class="sl-block-content" data-shape-type="symbol-thin-arrow-right" data-shape-fill-color="rgb(255, 255, 255)" data-shape-stretch="true" style="z-index: 15;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="2 4 28 24"><g class="shape-element" fill="rgb(255, 255, 255)"><path d="M19.414 27.414l10-10c0.781-0.781 0.781-2.047 0-2.828l-10-10c-0.781-0.781-2.047-0.781-2.828 0s-0.781 2.047 0 2.828l6.586 6.586h-19.172c-1.105 0-2 0.895-2 2s0.895 2 2 2h19.172l-6.586 6.586c-0.39 0.39-0.586 0.902-0.586 1.414s0.195 1.024 0.586 1.414c0.781 0.781 2.047 0.781 2.828 0z"></path></g></svg></div></div>
+<div class="sl-block" data-block-type="shape" style="min-width: 4px; min-height: 4px; width: 108px; height: 68px; left: 377px; top: 445px;" data-block-id="e8c474606e65673bb364dd9c39a29514"><div class="sl-block-content" data-shape-type="symbol-thin-arrow-right" data-shape-fill-color="rgb(255, 255, 255)" data-shape-stretch="true" style="z-index: 16;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="2 4 28 24"><g class="shape-element" fill="rgb(255, 255, 255)"><path d="M19.414 27.414l10-10c0.781-0.781 0.781-2.047 0-2.828l-10-10c-0.781-0.781-2.047-0.781-2.828 0s-0.781 2.047 0 2.828l6.586 6.586h-19.172c-1.105 0-2 0.895-2 2s0.895 2 2 2h19.172l-6.586 6.586c-0.39 0.39-0.586 0.902-0.586 1.414s0.195 1.024 0.586 1.414c0.781 0.781 2.047 0.781 2.828 0z"></path></g></svg></div></div>
+<div class="sl-block" data-block-type="shape" style="min-width: 4px; min-height: 4px; width: 108px; height: 68px; left: 666px; top: 444px;" data-block-id="256c05d5b315698066e5063c551ac856"><div class="sl-block-content" data-shape-type="symbol-thin-arrow-right" data-shape-fill-color="rgb(255, 255, 255)" data-shape-stretch="true" style="z-index: 17;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="2 4 28 24"><g class="shape-element" fill="rgb(255, 255, 255)"><path d="M19.414 27.414l10-10c0.781-0.781 0.781-2.047 0-2.828l-10-10c-0.781-0.781-2.047-0.781-2.828 0s-0.781 2.047 0 2.828l6.586 6.586h-19.172c-1.105 0-2 0.895-2 2s0.895 2 2 2h19.172l-6.586 6.586c-0.39 0.39-0.586 0.902-0.586 1.414s0.195 1.024 0.586 1.414c0.781 0.781 2.047 0.781 2.828 0z"></path></g></svg></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 161px; left: 3px; top: 551px;" data-block-id="556c7e232f96bd9b729e97c3e8767520"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 19;">
+<p style="text-align:center">Patch (in OpenStack Gerrit)</p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 108px; left: 254px; top: 548px;" data-block-id="50abf520c47d98a9a83ae88c19b463d8"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 20;">
+<p style="text-align: center;">RDO Trunk package</p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 108px; left: 521px; top: 551px;" data-block-id="ddb93a2e05539c21915222c7370364e2"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 21;">
+<p style="text-align:center">RDO Trunk repo</p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 108px; left: 806px; top: 551px;" data-block-id="de5b35cfc78be30eb18ab069b3ea30c1"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 22;">
+<p style="text-align:center">RDO GA repo</p>
+</div></div>
+<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 82px; top: 310px;" data-block-id="6be4280a8413a8cfa86ac3c6dc1557e5"><div class="sl-block-content" data-line-x1="-291" data-line-y1="170" data-line-x2="-291" data-line-y2="60" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 23;" data-line-style="dotted"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveaspectratio="xMidYMid" width="1" height="110" viewbox="-291 60 1 110"><line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-291" y1="170" x2="-291" y2="60"></line><line stroke="#000000" stroke-width="2" stroke-dasharray="0 3.9285714285714284" stroke-linecap="round" x1="-291" y1="170" x2="-291" y2="60"></line></svg></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 147px; left: 10px; top: 212px;" data-block-id="a070b7e8f6ab60027b0d7682503787af"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 24;">
+<p style="text-align: center;">Unit tests</p>
+
+<p style="text-align: center;">Integration tests</p>
+
+<p style="text-align: center;">(in gate)</p>
+</div></div>
+<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 308px; top: 316px;" data-block-id="dc9524ccb5724c4af6f90b5ddfffe3eb"><div class="sl-block-content" data-line-x1="-291" data-line-y1="170" data-line-x2="-291" data-line-y2="60" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 25;" data-line-style="dotted"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveaspectratio="xMidYMid" width="1" height="110" viewbox="-291 60 1 110"><line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-291" y1="170" x2="-291" y2="60"></line><line stroke="#000000" stroke-width="2" stroke-dasharray="0 3.9285714285714284" stroke-linecap="round" x1="-291" y1="170" x2="-291" y2="60"></line></svg></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 157px; left: 230px; top: 248px;" data-block-id="9c6f23567094062a26213dad55e132ea"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 26;">
+<p style="text-align:center">Unit tests</p>
+
+<p style="text-align:center">(when packaging)</p>
+</div></div>
+<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 574px; top: 328px;" data-block-id="01138910f3c8dad2f78343e3919f08b5"><div class="sl-block-content" data-line-x1="-291" data-line-y1="170" data-line-x2="-291" data-line-y2="60" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 27;" data-line-style="dotted"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveaspectratio="xMidYMid" width="1" height="110" viewbox="-291 60 1 110"><line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-291" y1="170" x2="-291" y2="60"></line><line stroke="#000000" stroke-width="2" stroke-dasharray="0 3.9285714285714284" stroke-linecap="round" x1="-291" y1="170" x2="-291" y2="60"></line></svg></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 173px; left: 488px; top: 230px;" data-block-id="bad86ac1f058725b942c85d85f9f53f7"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 28;">
+<p style="text-align:center">Integration tests</p>
+
+<p style="text-align:center">(with installers)</p>
+
+<p style="text-align:center">Promotion pipeline</p>
+</div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 110px; height: 110px; left: 567px; top: 354px;" data-block-id="8a280390d3577a4c2726c30e39f838df"><div class="sl-block-content" style="z-index: 29;" data-inline-svg="true">
+<img style="" data-natural-width="144" data-natural-height="144" data-src="anatomy-of-an-openstack-distribution/1273611-cross-platform-alt.svg"><svg xmlns="http://www.w3.org/2000/svg" width="144" height="144" viewbox="0 0 144 144" class="icon stroked icon-crossplatform icon-compatible" preserveaspectratio="xMidYMid meet"> <path fill="none" stroke="#666" stroke-width="2px" class="long" d="m 69.28,58.7 -3.37,-9 c 30.97,0 48.49,19.07 48.49,40 0,-31.32 -16.47,-50.86 -48.49,-50.86 l 3.37,-9 C 69.76,28.6 68.19,27.36 67.07,28.48 L 49.15,44.27 67.07,60.04 c 1,1 2.92,0 2.21,-1.34 z m 5.45,26.61 3.38,9 c -30.99,0 -48.54,-19.08 -48.54,-40.02 0,31.33 16.52,50.91 48.54,50.91 l -3.38,9 c -0.47,1.2 1.09,2.5 2.21,1.3 L 94.85,99.74 76.93,83.95 c -1,-1.01 -2.92,0 -2.21,1.36 z"></path></svg>
+</div></div>
+<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 859px; top: 329px;" data-block-id="1de6853503a055fcabc195d09efd0901"><div class="sl-block-content" data-line-x1="-291" data-line-y1="170" data-line-x2="-291" data-line-y2="60" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 30;" data-line-style="dotted"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveaspectratio="xMidYMid" width="1" height="110" viewbox="-291 60 1 110"><line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-291" y1="170" x2="-291" y2="60"></line><line stroke="#000000" stroke-width="2" stroke-dasharray="0 3.9285714285714284" stroke-linecap="round" x1="-291" y1="170" x2="-291" y2="60"></line></svg></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 157px; left: 781px; top: 261px;" data-block-id="690284d9f40d8250231393aa8a8bd3dc"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 31;">
+<p style="text-align:center">Rebuild</p>
+
+<p style="text-align:center">Integration tests</p>
+</div></div>
+<div class="sl-block" data-block-type="shape" style="min-width: 4px; min-height: 4px; width: 720px; height: 421px; left: 230px; top: 210px;" data-block-id="9d5cca68896ecfd8aed8fccaa3f95fb4"><div class="sl-block-style" style="z-index: 0; opacity: 0.3;"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(225, 239, 186)" data-shape-stretch="true" style="z-index: 0;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 720 421"><rect width="720" height="421" class="shape-element" fill="rgb(225, 239, 186)"></rect></svg></div></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 290px; top: 639px;" data-block-id="f910ed30c4d9c491013a6466c41ed519"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 33;">
+<p style="text-align:center"><strong><span style="font-size:1.2em">Additional testing coverage</span></strong></p>
+</div></div></section><section class="has-dark-background" data-background-color="#002a38" data-id="b46305fc8668b5bfcf6f707e764426b4">
+
+
+<div class="sl-block" data-block-type="text" style="height: auto; width: 945px; left: 12px; top: 70px;" data-block-id="36fabb6d11ac610bd58b9cc97305b550"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; text-align: left;" data-has-custom-html="">
+<h1 style="text-align: center;">RDO repositories</h1>
+</div></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 180px; top: 195px;" data-block-id="bec41b38183a56eb8c6554aeff6fa6f6"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<ul>
+	<li>
+<span style="font-size:1.8em"><strong>Stable</strong></span>
+	<ul>
+		<li><span style="font-size:1.4em">For general consumption</span></li>
+		<li><span style="font-size:1.4em">Signed packages</span></li>
+	</ul>
+	</li>
+	<li>
+<span style="font-size:1.8em"><strong>Testing</strong></span>
+	<ul>
+		<li><span style="font-size:1.4em">Future stable packages</span></li>
+		<li><span style="font-size:1.4em">Non-signed packages</span></li>
+	</ul>
+	</li>
+	<li>
+<span style="font-size:1.8em"><strong>Trunk</strong></span>
+	<ul>
+		<li><span style="font-size:1.4em">Latest commit from master branch in repo</span></li>
+		<li><span style="font-size:1.4em">Non-signed packages</span></li>
+		<li>
+<span style="font-size:1.4em">Bleeding edge!</span><br>
+		 </li>
+	</ul>
+	</li>
+</ul>
+</div></div></section><section class="has-dark-background" data-background-color="#002a38" data-id="87890be4208cc6e13cfb26e947bddc70">
+
+
+<div class="sl-block" data-block-type="text" style="height: auto; width: 945px; left: 12px; top: 70px;" data-block-id="4d6e3693bcb073b6bd8d6c4b3fbedbee"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; text-align: left;" data-has-custom-html="">
+<h1 style="text-align: center;">Continuous packaging</h1>
+</div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 501.027px; height: 118px; left: 234px; top: 554px;" data-block-id="e460a6d78489cf743bd7f94308513dc0"><div class="sl-block-content" style="z-index: 12;"><img style="" data-natural-width="794" data-natural-height="187" data-src="anatomy-of-an-openstack-distribution/3294679-DLRN.svg"></div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 960px; height: 362.431px; left: 0px; top: 169px;" data-block-id="9f49ca151476c442b539c49d872d94bb"><div class="sl-block-content" style="z-index: 13;"><img style="" data-natural-width="1629" data-natural-height="615" data-src="anatomy-of-an-openstack-distribution/3294703-dlrn-view.png"></div></div></section><section class="has-dark-background" data-background-color="#002a38" data-id="af469dc8151bee52530a74f6cd612471">
+
+
+<div class="sl-block" data-block-type="text" style="height: auto; width: 945px; left: 12px; top: 70px;" data-block-id="16f5fc8ff815babdb74ec418f2c04769"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 10; text-align: left;" data-has-custom-html="">
+<h1 style="text-align: center;">WHAT DLRN DOES</h1>
+</div></div>
+
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 800px; left: 80px; top: 210px;" data-block-id="eff6d72dfd8840a664e11e50c661f99d"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<ul>
+	<li><span style="font-size:1.6em">Fetch the latest upstream commit from Git repos</span></li>
+	<li><span style="font-size:1.6em">Build an RPM package from that code</span></li>
+	<li>
+<span style="font-size:1.6em">Create a YUM repo with the latest versions of each package</span>
+	<ul>
+		<li><span style="font-size:1.6em">This repo will be used for CI jobs</span></li>
+	</ul>
+	</li>
+	<li>
+<span style="font-size:1.6em">If a package build fails</span>
+	<ul>
+		<li><span style="font-size:1.6em">Automatically open a review to fix the spec file</span></li>
+	</ul>
+	</li>
+</ul>
+</div></div></section><section class="has-dark-background" data-background-color="#002a38" data-id="46178357aa59ab499a8262d0dee6f580">
+
+
+<div class="sl-block" data-block-type="text" style="height: auto; width: 945px; left: 12px; top: 70px;" data-block-id="bf9c35de3aa97a22042f2fa9868c4a62"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; text-align: left;" data-has-custom-html="">
+<h1 style="text-align: center;">Fixing packages asap</h1>
+</div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 960px; height: 170.173px; left: 0px; top: 140px;" data-block-id="53cd3103d690cf3a68fc9e5e5e9f6c17"><div class="sl-block-content" style="z-index: 12;"><img style="" data-natural-width="1038" data-natural-height="184" data-src="anatomy-of-an-openstack-distribution/3305886-build_error.png"></div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 503.217px; height: 219px; left: 0px; top: 479px;" data-block-id="0ed539fe57cf839214f48376e082cbec"><div class="sl-block-content" style="z-index: 13;"><img style="" data-natural-width="625" data-natural-height="272" data-src="anatomy-of-an-openstack-distribution/3305894-ftbfs-review.png"></div></div>
+<div class="sl-block" data-block-type="shape" style="min-width: 4px; min-height: 4px; width: 103px; height: 140px; left: 109px; top: 325px;" data-block-id="6f964d9aa209f2eb81abf5abaf894377"><div class="sl-block-content" data-shape-type="symbol-thin-arrow-down" data-shape-fill-color="rgb(255, 255, 255)" data-shape-stretch="true" style="z-index: 14;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="4 2 24 28"><g class="shape-element" fill="rgb(255, 255, 255)"><path d="M4.586 19.414l10 10c0.781 0.781 2.047 0.781 2.828 0l10-10c0.781-0.781 0.781-2.047 0-2.828s-2.047-0.781-2.828 0l-6.586 6.586v-19.172c0-1.105-0.895-2-2-2s-2 0.895-2 2v19.172l-6.586-6.586c-0.391-0.39-0.902-0.586-1.414-0.586s-1.024 0.195-1.414 0.586c-0.781 0.781-0.781 2.047 0 2.828z"></path></g></svg></div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 587.41px; height: 209px; left: 560px; top: 342px;" data-block-id="867ab97b53b4857a48ca32c29f050da8"><div class="sl-block-content" style="z-index: 15;"><img style="" data-natural-width="638" data-natural-height="227" data-src="anatomy-of-an-openstack-distribution/3305905-ftbfs-fix.png"></div></div>
+<div class="sl-block" data-block-type="shape" style="min-width: 4px; min-height: 4px; width: 125px; height: 127px; left: 515px; top: 560px;" data-block-id="f026f04c12758fdd671b770e4fea6221"><div class="sl-block-content" data-shape-type="symbol-thin-arrow-up-right" data-shape-fill-color="rgb(255, 255, 255)" data-shape-stretch="true" style="z-index: 16;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="4 4 24 24"><g class="shape-element" fill="rgb(255, 255, 255)"><path d="M26.001 4c-0 0-0.001 0-0.001 0h-11.999c-1.105 0-2 0.895-2 2s0.895 2 2 2h7.172l-16.586 16.586c-0.781 0.781-0.781 2.047 0 2.828 0.391 0.391 0.902 0.586 1.414 0.586s1.024-0.195 1.414-0.586l16.586-16.586v7.172c0 1.105 0.895 2 2 2s2-0.895 2-2v-14h-1.999z"></path></g></svg></div></div></section><section class="has-dark-background" data-background-color="#002a38" data-id="f90c2fd3cdd2d06be3d6ef94927a341c">
+
+
+<div class="sl-block" data-block-type="text" style="height: auto; width: 945px; left: 15px; top: 71px;" data-block-id="23465c2e6628df45041817bf00e0a3c3"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; text-align: left;" data-has-custom-html="">
+<h1 style="text-align: center;">The promotion pipeline</h1>
+</div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 621.881px; height: 528px; left: 169px; top: 156px;" data-block-id="1d5ee7d6b4c3bcbec1661987fdbf306f"><div class="sl-block-content" style="z-index: 12;"><img style="" data-natural-width="934" data-natural-height="793" data-src="anatomy-of-an-openstack-distribution/3294490-promotion_pipeline.png"></div></div></section><section class="has-dark-background" data-background-color="#002a38" data-id="200d6b16d8414497168f67eddf93e22c">
+
+
+<div class="sl-block" data-block-type="text" style="height: auto; width: 945px; left: 15px; top: 71px;" data-block-id="da4af83f8ddaf7ac6ef765c6a120d2c3"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; text-align: left;" data-has-custom-html="">
+<h1 style="text-align: center;">Why test?</h1>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 800px; left: 80px; top: 280px;" data-block-id="a2d2ae0dbf8fc76f56e89adbaf165e84"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<p style="text-align:center"><span style="font-size:3.0em"><strong>Well, it worked on DevStack</strong> ¯\_(ツ)_/¯</span></p>
+</div></div></section><section class="has-dark-background" data-background-color="#002a38" data-id="315863777a4cd12091338415d9ba6aff">
+
+
+<div class="sl-block" data-block-type="text" style="height: auto; width: 945px; left: 15px; top: 71px;" data-block-id="2b4d66dfebcaad05c58100caad046482"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; text-align: left;" data-has-custom-html="">
+<h1 style="text-align: center;">Deployment projects tested</h1>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 80px; top: 262px;" data-block-id="1c39c55cbf69b613dd07b52948eb2e6d"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<ul>
+	<li>
+<span style="font-size:1.6em">TripleO</span>
+	<ul>
+		<li><span style="font-size:1.6em">Minimal and Pacemaker</span></li>
+	</ul>
+	</li>
+	<li><span style="font-size:1.6em">Packstack</span></li>
+	<li><span style="font-size:1.6em">Puppet-OpenStack-Integration</span></li>
+	<li><span style="font-size:1.6em">Kolla (future)</span></li>
+</ul>
+</div></div></section><section class="has-dark-background" data-background-color="#002a38" data-id="6c6e6bf256e9459cb0efdc0bff938cab">
+
+
+<div class="sl-block" data-block-type="text" style="height: auto; width: 945px; left: 15px; top: 71px;" data-block-id="f2bfba211ad7b932ba8d8f596ea63f75"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; text-align: left;" data-has-custom-html="">
+<h1 style="text-align: center;">Deployment projects tested</h1>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 600px; left: 80px; top: 262px;" data-block-id="074313ca972ac2f9e71f737d853e7865"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<ul>
+	<li>
+<span style="font-size:1.6em">TripleO</span>
+	<ul>
+		<li><span style="font-size:1.6em">Minimal and Pacemaker</span></li>
+	</ul>
+	</li>
+	<li><span style="font-size:1.6em">Packstack</span></li>
+	<li><span style="font-size:1.6em">Puppet-OpenStack-Integration</span></li>
+	<li><span style="font-size:1.6em">Kolla (future)</span></li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 906px; left: 35px; top: 595px;" data-block-id="756e9321b4b5afd108e10d862d1131af"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;">
+<p><span style="font-size:1.6em">Once all jobs pass, a repo gets the "CI passed" seal of approval</span></p>
+</div></div>
+<div class="sl-block" data-block-type="image" style="width: 299.433px; height: 300px; left: 581px; top: 191px;" data-block-id="2cc4d0247292837e21887a1c11a99a5e"><div class="sl-block-content" style="z-index: 14; transition-duration: 1.2s; transition-delay: 3.9s;" data-animation-type="fade-in"><img style="" data-natural-width="528" data-natural-height="529" data-src="anatomy-of-an-openstack-distribution/3305933-approved.png"></div></div></section><section class="has-dark-background" data-background-color="#002a38" data-id="124f59f08d4d3729df544b04cee49e94">
+
+
+<div class="sl-block" data-block-type="text" style="height: auto; width: 945px; left: 15px; top: 71px;" data-block-id="307012d3e88bf9a9900c214ab968787c"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; text-align: left;" data-has-custom-html="">
+<h1 style="text-align: center;">The result of all this</h1>
+</div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 800px; height: 153.749px; left: 80px; top: 351px;" data-block-id="7e15b026f8c7ec9694f314adb3a2e73d"><div class="sl-block-content" style="z-index: 12;"><img style="" data-natural-width="947" data-natural-height="182" data-src="anatomy-of-an-openstack-distribution/3306081-rdo-newton-release.png"></div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 800px; height: 101.449px; left: 80px; top: 210px;" data-block-id="fe4a15d50ee3c91899a906fee64b598e"><div class="sl-block-content" style="z-index: 13;"><img style="" data-natural-width="828" data-natural-height="105" data-src="anatomy-of-an-openstack-distribution/3306083-newton-upstream-announce.png"></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 188px; top: 573px;" data-block-id="d447efa5f0f59c545dd156835c6a07c3"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14;">
+<p style="text-align: center;"><span style="font-size:1.8em">Next step, 1 hour!</span></p>
+</div></div></section><section class="has-dark-background" data-background-color="#002a38" data-id="e53d0ef29546cb8a56ea790a50510bb0">
+
+
+<div class="sl-block" data-block-type="text" style="height: auto; width: 945px; left: 15px; top: 71px;" data-block-id="0a301e9aa7e406041db6432c0fddffc8"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; text-align: left;" data-has-custom-html="">
+<h1 style="text-align: center;">Can I contribute to RDO?</h1>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 600px; left: 78px; top: 374px;" data-block-id="dd4239f4a8bdf378ac9e69d5266afebd"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<p style="text-align:center"><span style="font-size:3.0em"><strong>OF COURSE!</strong></span></p>
+</div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 265.049px; height: 300px; left: 618px; top: 244px;" data-block-id="e90b767121d4413bbc8635a2591b5bff"><div class="sl-block-content" style="z-index: 13;" data-inline-svg="true">
+<img style="" data-natural-width="91" data-natural-height="103" data-src="anatomy-of-an-openstack-distribution/2838649-Icon_RH_People_Hand-ThumbsUp_RGB_Flat.svg"><svg width="91.067" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 91.066857 102.841546" height="102.84" preserveaspectratio="xMidYMid meet">
+ <path d="m65.035 8c-2.59 0.129-5.25 1.867-6.77 4.574a12.69 12.69 0 0 0 -0.933 1.875c-2.527 4.664-4.527 8.395-13.332 14.395-3.863 2.664-6.398 5.199-8.8 7.465-3.868 3.867-6.4 6.402-11.731 6.402h-7.203c-4.532-0.001-8.266 3.734-8.266 8.266v21.199c0 4.535 3.734 8.27 8.266 8.27h7.87c0.395 0.394 1.196 1.464 1.864 2.53 3.2 4.403 8.531 11.864 16.668 11.864h25.332c4.266 0 7.734-3.461 7.734-7.727v-0.668c0-2-0.804-3.734-2-5.066h1.598a7.74 7.74 0 0 0 7.734 -7.734v-0.668a7.887 7.887 0 0 0 -2 -5.2h0.536a7.735 7.735 0 0 0 7.73 -7.73v-0.668c0.137-4.266-3.332-7.734-7.598-7.734h-0.402c1.2-1.333 1.867-3.067 1.867-5.067v-0.668c0-4.265-3.465-7.734-7.73-7.734h-14.137c4.137-4 11.602-12.266 11.2-20.531-0.395-7.47-4.13-9.067-5.727-9.47a5.878 5.878 0 0 0 -1.77 -0.175zm0.34 2.64c0.254-0.003 0.508 0.02 0.762 0.07 2.129 0.532 3.46 3.071 3.726 7.071 0.403 9.063-10.531 18.797-12.531 20.395h-2.398c-4.266 0-7.735 3.469-7.735 7.734v0.668c0 2.664 1.332 4.93 3.332 6.399-2 1.336-3.332 3.734-3.332 6.402v0.668c0 2.664 1.332 5.066 3.469 6.398-2.137 1.332-3.469 3.73-3.469 6.395v0.668c0 2.668 1.332 5.07 3.469 6.402-2 1.336-3.469 3.735-3.469 6.403v0.664c0 1.863 0.664 3.734 1.867 5.07h-6.261c-6.668 0.129-11.473-6.668-14.407-10.668-1.73-2.399-2.535-3.602-3.867-3.602h-8.133c-3.066 0-5.597-2.535-5.597-5.601v-21.2c0-3.066 2.531-5.597 5.597-5.597h7.204c6.398-0.137 9.464-3.203 13.464-7.203 2.266-2.266 4.797-4.664 8.403-7.196 9.199-6.402 11.465-10.53 14.133-15.332 0.265-0.53 0.664-1.203 0.93-1.738 1.167-1.98 3.05-3.25 4.843-3.265zm-10.441 30.2h20.535a5.07 5.07 0 0 1 5.062 5.07v0.668c0 2.8-2.265 5.067-5.062 5.067h-20.535a5.064 5.064 0 0 1 -5.07 -5.067v-0.668a5.071 5.071 0 0 1 5.07 -5.066zm0 13.472h26.8a5.069 5.069 0 0 1 5.07 5.067v0.668a5.071 5.071 0 0 1 -5.07 5.066h-26.8a5.074 5.074 0 0 1 -5.07 -5.066v-0.668a5.069 5.069 0 0 1 5.07 -5.066zm0 13.602h20.535c1.344 0 2.633 0.531 3.582 1.48a5.08 5.08 0 0 1 1.48 3.586v0.665c0 2.8-2.265 5.07-5.062 5.07h-20.535a5.07 5.07 0 0 1 -5.07 -5.07v-0.665c0-2.8 2.269-5.07 5.07-5.066zm0 13.465h13.332a5.06 5.06 0 0 1 5.066 5.066v0.668a5.064 5.064 0 0 1 -1.48 3.582 5.08 5.08 0 0 1 -3.586 1.48h-13.332a5.07 5.07 0 0 1 -5.07 -5.062v-0.668a5.069 5.069 0 0 1 5.07 -5.066z"></path>
+</svg>
+</div></div></section><section class="has-dark-background" data-background-color="#002a38" data-id="d946174ff4aa82d9fbc4bb0a58f743c1">
+
+
+<div class="sl-block" data-block-type="text" style="height: auto; width: 945px; left: 15px; top: 71px;" data-block-id="2dde00277b949182c3783b435e1840a7"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 10; text-align: left;" data-has-custom-html="">
+<h1 style="text-align: center;">Ways to contribute</h1>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 816px; left: 80px; top: 227px;" data-block-id="6c82eb750055f9f3f5a2c10de59b0c0a"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;">
+<ul>
+	<li><span style="font-size:1.6em">RDO Test days: https://www.rdoproject.org/testday/</span></li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 118.273px; height: 120px; left: 821px; top: 290px;" data-block-id="0a2a96bf53d6606051d91afe49e52080"><div class="sl-block-content" style="z-index: 12;"><img style="" data-natural-width="137" data-natural-height="139" data-src="anatomy-of-an-openstack-distribution/3306203-edit_on_github.png"></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 738px; left: 83px; top: 308px;" data-block-id="6b856f5aa06ca10f725b4c99d0a328be"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;">
+<ul>
+	<li><span style="font-size:1.6em">RDO Documentation: https://www.rdoproject.org/documentation/</span></li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 831px; left: 83px; top: 420px;" data-block-id="3886228be9efb7bd052bc97a792acfdc"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14;">
+<ul>
+	<li><span style="font-size:1.6em">RDO Packaging repos: https://github.com/rdo-packages</span></li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 831px; left: 83px; top: 490px;" data-block-id="30338f7f6653a851b486d5e5698d5e7d"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 16;">
+<ul>
+	<li><span style="font-size:1.6em">RDO Gerrit: https://review.rdoproject.org</span></li>
+</ul>
+</div></div></section><section class="has-dark-background" data-background-color="#002a38" data-id="a43af77c64a62b0736911334fb532e2d">
+
+
+<div class="sl-block" data-block-type="text" style="height: auto; width: 945px; left: 15px; top: 71px;" data-block-id="89718d802a8c91f2c3f38223fa4ec0ae"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; text-align: left;" data-has-custom-html="">
+<h1 style="text-align: center;">Adding a new package</h1>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 816px; left: 80px; top: 228px;" data-block-id="fe80c72d42a7f6d0b8b87b109d10e5e7"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<ol>
+	<li><span style="font-size:1.6em">Open review at bugzilla.redhat.com</span></li>
+	<li><span style="font-size:1.6em">Add project to rdoinfo</span></li>
+	<li><span style="font-size:1.6em">Review spec file</span></li>
+	<li><span style="font-size:1.6em">Enable package builds</span></li>
+	<li><span style="font-size:1.6em">Package built and tested in RDO Trunk</span></li>
+	<li><span style="font-size:1.6em">Package available on the next RDO GA</span></li>
+</ol>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 903px; left: 43px; top: 604px;" data-block-id="e0de920f8c1aee87aec97906c5ba89a1"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;">
+<p>Detailed process at https://www.rdoproject.org/documentation/rdo-packaging/#how-to-add-a-new-package-to-rdo-trunk</p>
+</div></div></section><section class="has-dark-background" data-background-color="#002a38" data-id="41a6b6f11eee506b3fa332ffa5b9a149">
+
+
+<div class="sl-block" data-block-type="text" style="height: auto; width: 945px; left: 15px; top: 71px;" data-block-id="31c5776c460e9db1cf604263364aa864"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; text-align: left;" data-has-custom-html="">
+<h1 style="text-align: center;">QA for package reviews</h1>
+</div></div>
+
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 852px; height: 536px; left: 54px; top: 152px;" data-block-id="f0e1d2e1aada93bcf54d0a27c15ffb4a"><div class="sl-block-content" style="z-index: 12;"><img style="" data-natural-width="1318" data-natural-height="829" data-src="anatomy-of-an-openstack-distribution/3360205-rdo_package_review.png"></div></div>
+<div class="sl-block" data-block-type="shape" style="min-width: 4px; min-height: 4px; width: 98px; height: 86px; left: 584px; top: 553px;" data-block-id="af5cd18a1547e395c4e69596dc2b0281"><div class="sl-block-content" data-shape-type="symbol-thin-arrow-down-left" data-shape-fill-color="rgb(178, 26, 15)" data-shape-stretch="true" style="z-index: 13;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="4 4 24 24"><g class="shape-element" fill="rgb(178, 26, 15)"><path d="M18 28c1.105 0 2-0.895 2-2s-0.895-2-2-2h-7.172l16.586-16.586c0.781-0.781 0.781-2.047 0-2.828-0.391-0.391-0.902-0.586-1.414-0.586s-1.024 0.195-1.414 0.586l-16.586 16.586v-7.172c0-1.105-0.895-2-2-2s-2 0.895-2 2v14h14z"></path></g></svg></div></div></section><section class="has-dark-background" data-background-color="#002a38" data-id="191b9430527508727ad3adc69792d70e">
+
+
+<div class="sl-block" data-block-type="text" style="height: auto; width: 945px; left: 0px; top: 320px;" data-block-id="5f4696a83fcabe32dcb796dc0aade79d"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; text-align: left;" data-has-custom-html="">
+<h1 style="text-align: center;">Q&amp;A TIME</h1>
+</div></div>
+</section><section class="in-3d-appear has-dark-background" data-background-color="#b21a0f" data-background-image="anatomy-of-an-openstack-distribution/1748213-drawing2.svg" data-id="51b017a6b67ca7fa930fda10c3831c02">    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div style="position:relative !important; width: 880px; height: 320px; margin-left:40px; ">
+    <svg class="closing-logo logotype" width="494" height="180" viewbox="0 0 494 180" style="position:absolute; top:190px; bottom: 0%; height: 50%; width: 50%; left:0: right:0;">
+        <g>
+            <path class="logotext" style="fill:white" d="M488.326 115.346c-1.816 0-3.281 1.469-3.281 3.284 0 1.809 1.465 3.271 3.281 3.271 1.81 0 3.277-1.461 3.277-3.271 0-1.815-1.468-3.284-3.277-3.284zm3.989 3.281c0 2.197-1.788 3.983-3.989 3.983-2.196 0-3.986-1.786-3.986-3.983 0-2.201 1.79-3.987 3.986-3.987 2.201 0 3.989 1.786 3.989 3.987m-4.716-.255v-1.262h.838c.424 0 .887.095.887.596 0 .626-.464.666-.989.666h-.736zm0 .525h.711l1.071 1.76h.693l-1.16-1.796c.604-.073 1.059-.388 1.059-1.113 0-.809-.481-1.158-1.439-1.158h-1.552v4.067h.618v-1.76m-22.172-63.12v11.917h15.415v4.338h-15.415v35.149c0 6.877 2.135 11.185 7.944 11.185 2.788 0 4.759-.366 6.145-.847l.647 4.142c-1.746.732-4.199 1.3-7.464 1.3-3.946 0-7.219-1.243-9.331-3.835-2.449-2.841-3.286-7.38-3.286-12.897v-34.197h-9.126v-4.338h9.126v-9.944l5.345-1.973m-26.645 37.095c-11.776-.339-27.325 1.445-27.325 14.429 0 7.771 5.13 11.265 10.764 11.265 9.011 0 14.135-5.58 16.001-10.843.389-1.154.56-2.313.56-3.24v-11.61zm5.346 16.059c0 4.276.172 8.704.789 12.845h-4.928l-.785-7.749h-.255c-2.619 4.167-8.645 8.979-17.241 8.979-10.881 0-15.944-7.652-15.944-14.863 0-12.483 11.018-20.002 33.017-19.77v-1.445c0-5.35-1.04-16.02-13.832-15.936-4.732 0-9.662 1.266-13.575 4.029l-1.702-3.89c4.94-3.349 10.974-4.673 15.865-4.673 15.605 0 18.591 11.715 18.591 21.378v21.095m-66.784-42.473c-4.115 0-7.801 1.187-10.899 3.098-3.215 1.883-5.831 4.79-7.388 7.8h-.216v-25.289l-5.35-1.58v71.289h5.35v-33.071c0-2.197.168-3.721.728-5.327 2.311-6.727 8.65-12.247 16.311-12.247 11.071 0 14.904 8.878 14.904 18.616v32.03h5.346v-32.62c0-20.142-13.66-22.699-18.786-22.699m-36.127-19.525l-13.656-3.852v30.478h-.225c-2.416-3.992-7.745-7.039-15.141-7.039-12.994 0-24.308 10.752-24.226 28.857 0 16.609 10.22 27.613 23.124 27.613 7.799 0 14.316-3.716 17.545-9.769h.244l.613 8.556h12.174c-.251-3.673-.45-9.624-.45-15.155v-59.689zm-13.656 51.413c0 1.432-.101 2.766-.414 3.986-1.376 5.913-6.211 9.724-11.799 9.724-8.602 0-13.526-7.252-13.526-17.18 0-10.026 4.88-17.785 13.681-17.785 6.144 0 10.541 4.331 11.75 9.594.233 1.107.307 2.472.307 3.564v8.097m-58.078-9.429c.063-5.007-2.116-13.166-11.268-13.166-8.412 0-11.909 7.631-12.521 13.166h23.789zm-23.762 9.518c.361 9.791 7.94 14.075 16.69 14.075 6.282 0 10.78-.984 14.911-2.502l2.021 9.399c-4.621 1.963-11.04 3.427-18.883 3.427-17.546 0-27.824-10.835-27.824-27.392 0-14.913 9.046-29.026 26.426-29.026 17.57 0 23.289 14.451 23.289 26.279 0 2.539-.226 4.578-.486 5.837l-36.145-.099m-46.773-13.329c0-7.234-.15-12.554-.443-17.366h11.831l.506 10.264h.388c2.659-7.607 8.96-11.484 14.793-11.484 1.334 0 2.111.05 3.204.295v12.87c-1.278-.251-2.473-.388-4.116-.388-6.51 0-11.027 4.142-12.248 10.335-.23 1.204-.354 2.65-.354 4.122v28.022h-13.671l.11-36.67m-40.274 30.239c-1.816 0-3.281 1.469-3.281 3.284 0 1.809 1.465 3.271 3.281 3.271 1.81 0 3.277-1.461 3.277-3.271 0-1.815-1.468-3.284-3.277-3.284zm3.989 3.281c0 2.197-1.788 3.983-3.989 3.983-2.196 0-3.986-1.786-3.986-3.983 0-2.201 1.79-3.987 3.986-3.987 2.201 0 3.989 1.786 3.989 3.987m-4.716-.255v-1.262h.838c.424 0 .887.095.887.596 0 .626-.464.666-.989.666h-.736zm0 .525h.711l1.071 1.76h.693l-1.16-1.796c.604-.073 1.059-.388 1.059-1.113 0-.809-.481-1.158-1.439-1.158h-1.552v4.067h.618v-1.76"></path>
+        </g>
+    </svg>
+    <svg class="closing-logo icon" width="494" height="180" viewbox="0 0 494 180" preserveaspectratio="xMminYmin meet" style="position:absolute; top:190px;width: 50%;  bottom: 0%; height: 50%; left:0: right:0;">
+        <g>
+            <path class="face" style="fill:white" d="M146.083 123.002c-3.04-.697-6.264-1.138-9.526-1.138-5.579 0-10.655.965-14.398 2.527-.413.204-.706.636-.706 1.125 0 .181.045.361.113.515.443 1.281-.284 2.671-3.908 3.469-5.372 1.181-8.764 6.725-10.704 8.565-2.279 2.165-8.716 3.493-7.747 2.203.758-1.006 3.654-4.154 5.416-7.553 1.576-3.04 2.979-3.904 4.912-6.805.566-.848 2.765-3.837 3.405-6.201.718-2.305.476-5.203.751-6.393.396-1.721 2.018-5.451 2.14-7.556.071-1.193-4.974 1.7-7.367 1.7-2.392 0-4.724-1.436-6.862-1.538-2.647-.122-4.347 2.043-6.742 1.664-1.366-.219-2.518-1.425-4.908-1.513-3.402-.124-7.56 1.892-15.368 1.641-7.68-.251-14.775-9.708-15.743-11.212-1.135-1.763-2.521-1.763-4.03-.375-1.513 1.384-3.375.295-3.905-.635-1.007-1.76-3.701-6.912-7.873-7.993-5.769-1.495-8.69 3.193-8.31 6.925.385 3.788 2.833 4.85 3.967 6.863 1.132 2.015 1.712 3.312 3.846 4.203 1.511.634 2.074 1.564 1.625 2.807-.395 1.08-1.968 1.327-3.002 1.378-2.198.105-3.739-.492-4.862-1.208-1.307-.836-2.37-1.992-3.51-3.955-1.32-2.168-3.398-3.113-5.82-3.113-1.154 0-2.234.304-3.193.798-3.794 1.978-8.312 3.144-13.175 3.144l-5.484.005c10.518 31.194 40.013 53.656 74.756 53.656 27.752 0 52.156-14.331 66.214-36.001"></path>
+            <path class="black-circle" style="fill:black" d="M97.244 115.77c.405.394 1.105 1.728.249 3.416-.479.896-.995 1.524-1.917 2.261-1.109.891-3.278 1.917-6.253.032-1.597-1.015-1.696-1.356-3.903-1.071-1.578.207-2.205-1.384-1.639-2.71.568-1.318 2.899-2.389 5.795-.69 1.304.764 3.335 2.384 5.115.95.737-.591 1.178-.984 2.201-2.17.089-.116.266-.104.352-.017zm48.843 7.234c-3.04-.702-6.264-1.138-9.526-1.138-5.579 0-10.655.968-14.398 2.522-.413.208-.706.637-.706 1.129 0 .177.045.363.113.512.443 1.284-.284 2.676-3.908 3.471-5.372 1.181-8.764 6.723-10.704 8.566-2.279 2.161-8.716 3.494-7.747 2.204.758-1.009 3.654-4.156 5.416-7.556 1.576-3.037 2.979-3.903 4.912-6.801.566-.852 2.765-3.84 3.405-6.202.718-2.309.476-5.202.751-6.396.396-1.717 2.018-5.449 2.14-7.554.071-1.19-4.974 1.697-7.367 1.697-2.392 0-4.724-1.429-6.862-1.533-2.647-.127-4.347 2.04-6.742 1.662-1.366-.219-2.518-1.421-4.908-1.511-3.402-.126-7.56 1.89-15.368 1.638-7.68-.247-14.775-9.704-15.743-11.207-1.135-1.766-2.521-1.766-4.03-.377-1.513 1.38-3.375.294-3.905-.634-1.007-1.763-3.701-6.917-7.873-7.996-5.769-1.498-8.69 3.193-8.31 6.924.385 3.787 2.833 4.849 3.967 6.862 1.132 2.015 1.712 3.319 3.846 4.21 1.511.626 2.074 1.562 1.625 2.803-.395 1.081-1.968 1.328-3.002 1.378-2.198.103-3.739-.492-4.862-1.212-1.307-.83-2.37-1.987-3.51-3.953-1.32-2.168-3.398-3.111-5.82-3.111-1.154 0-2.234.306-3.193.798-3.794 1.974-8.312 3.146-13.175 3.146h-5.484c-2.669-7.915-4.116-16.395-4.116-25.212 0-43.562 35.313-78.871 78.873-78.871 43.561 0 78.87 35.31 78.87 78.871 0 15.808-4.649 30.526-12.656 42.872"></path>
+            <path class="hat" style="fill:#c00" d="M124.38 59.146c-.781 2.621-1.888 5.971-6.82 8.502-.719.369-.993-.235-.662-.802 1.864-3.17 2.195-3.962 2.737-5.212.758-1.829 1.155-4.43-.352-9.854-2.966-10.674-9.154-24.942-13.652-29.571-4.34-4.468-12.206-5.724-19.314-3.9-2.618.671-7.741 3.335-17.239 1.196-16.441-3.703-18.876 4.529-19.817 8.113-.946 3.589-3.21 13.78-3.21 13.78-.756 4.153-1.744 11.37 23.782 16.233 11.893 2.264 12.496 5.337 13.022 7.548.945 3.961 2.453 6.229 4.152 7.362 1.698 1.135 0 2.073-1.885 2.265-5.065.526-23.783-4.843-34.856-11.135-9.061-5.537-9.212-10.522-7.138-14.751-13.685-1.48-23.957 1.282-25.818 7.762-3.196 11.118 24.444 30.111 55.919 39.642 33.031 10 67.004 3.018 70.781-17.744 1.712-9.432-6.231-16.41-19.63-19.432zm-41.116-35.382c-.385.051-.406-.312-.111-.456 1.795-.875 4.401-1.675 7.417-1.982 1.106-.109 2.1-.163 3.091-.145 5.056.093 9.102 2.125 9.043 4.486-.06 2.366-4.205 4.19-9.262 4.077-1.636-.039-3.172-.275-4.495-.656-.155-.041-.269-.174-.269-.331 0-.158.114-.294.273-.334 3.154-.73 5.282-1.921 5.132-3.049-.198-1.494-4.323-2.306-9.215-1.816-.536.056-1.327.17-1.604.206zm-9.53 15.051c-9.11.66-10.056 1.644-11.762 3.461-2.406 2.563-5.576-3.325-5.576-3.325-1.901-.4-4.207-3.468-2.964-6.332 1.226-2.831 3.49-1.982 4.199-1.101.862 1.074 2.705 2.831 5.096 2.767 2.391-.063 5.15-.565 8.998-.565 3.898 0 6.521 1.456 6.668 2.707.127 1.068-.316 2.074-4.658 2.388"></path>
+        </g>
+    </svg>
+</div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 403px; left: 557px; top: 251px;" data-block-id="dd9dd6f4561408fdc5c369513a3f5175"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; text-align: left; font-size: 88%;">
+<h1>THANK YOU!</h1>
+</div></div>
+<div class="sl-block" data-block-type="shape" style="width: 4px; height: 214px; left: 511px; top: 171px;" data-block-id="1ce9c36a96bbdf678942df79dc2df648"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(255, 255, 255)" data-shape-stretch="true" style="z-index: 12;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 4 214"><rect width="4" height="214" class="shape-element" fill="rgb(255, 255, 255)"></rect></svg></div></div>
+
+
+
+
+
+
+<div class="sl-block" data-block-type="image" style="width: 35px; height: 28.4884px; left: 82px; top: 451px;" data-block-id="b9fe4a2689dbd2d541b452ca68e8eb38"><div class="sl-block-content" style="z-index: 13;" data-inline-svg="true">
+<img data-natural-width="172" data-natural-height="140" style="" data-src="anatomy-of-an-openstack-distribution/1551975-twitter.svg"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 171.51 139.38" height="139.38" width="171.51" preserveaspectratio="xMidYMid meet">
+ 
+  <path d="m 164.13,21.079 c -5.77,2.559 -11.98,4.287 -18.47,5.063 6.63,-3.984 11.73,-10.281 14.13,-17.7933 C 153.58,12.032 146.7,14.709 139.37,16.153 133.51,9.9024 125.16,6 115.9,6 98.148,6 83.74,20.394 83.74,38.151 c 0,2.522 0.284,4.981 0.841,7.329 C 57.85,44.137 34.161,31.342 18.296,11.886 c -2.769,4.743 -4.35,10.272 -4.35,16.166 0,11.15 5.675,20.993 14.302,26.759 -5.273,-0.164 -10.226,-1.608 -14.567,-4.021 0,0.137 0,0.274 0,0.411 0,15.573 11.085,28.569 25.79,31.53 -2.696,0.731 -5.538,1.124 -8.472,1.124 -2.065,0 -4.085,-0.201 -6.05,-0.576 4.095,12.777 15.975,22.071 30.04,22.341 -11.003,8.61 -24.867,13.76 -39.937,13.76 -2.596,0 -5.1545,-0.16 -7.6677,-0.45 14.2297,9.12 31.1367,14.45 49.2957,14.45 59.15,0 91.49,-49.004 91.49,-91.5 0,-1.389 0,-2.779 -0.1,-4.159 6.28,-4.532 11.73,-10.199 16.05,-16.642 z"></path>
+</svg>
+</div></div>
+<div class="sl-block" data-block-type="snippet" style="width: 299px; height: 48px; left: 80px; top: 440px;" data-block-id="ea5da4d57a03551a73e3566ba4e17abf"><div class="sl-block-content" data-has-custom-html="" style="z-index: 10;">
+<p style="text-align: center;"><a href="http://twitter.com/RedHatNews" style=" text-decoration:none; font-weight: 500; border:none; box-shadow: none; text-shadow: 0 .1em .25em rgba(0,0,0,0.1) ; min-width: 12em;font-size:.5em; letter-spacing:.031em; padding:.66666em 4em ; color:#fff !important" target="_blank">twitter.com/fj_pena</a></p>
+</div></div>
+
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 179.667px; height: 63px; left: 218px; top: 559px;" data-block-id="ccc6e6e07cba79bad22fdd758c86081c"><div class="sl-block-content" style="z-index: 14;"><img style="" data-natural-width="154" data-natural-height="54" data-src="anatomy-of-an-openstack-distribution/3157550-rdo-logo-white.png"></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 134px; left: 419px; top: 552px;" data-block-id="3c07269756b379e226ba4ae681857524"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 15;">
+<p><strong>Visit us:<br>
+Chat with us:<br>
+Follow us:</strong></p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 212px; left: 530px; top: 551px;" data-block-id="3b31a723508fa71102849a33e9d94d4b"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 16;">
+<p style="text-align: right;">https://rdoproject.org<br>
+#rdo on freenode<br>
+@rdocommunity</p>
+</div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 60.193px; height: 47px; left: 391px; top: 441px;" data-block-id="f7015e74320507d17d0e945ad7da2b04"><div class="sl-block-content" style="z-index: 17;" data-inline-svg="true">
+<img style="" data-natural-width="73" data-natural-height="57" data-src="anatomy-of-an-openstack-distribution/2838918-RH_Icon_Mail-Envelope-Front_Flat.svg"><svg width="73.043" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 73.043 57.115" height="57.115" preserveaspectratio="xMidYMid meet">
+ <path d="m64.043 8h-55.043c-0.555 0-1 0.445-1 1v39.113c0 0.555 0.445 1 1 1h55.043c0.555 0 1-0.445 1-1v-39.113c0-0.555-0.445-1-1-1zm-1 39.113h-53.043v-37.113h53.043z"></path>
+ <path d="m51.18 24.375h7.136a0.75 0.75 0 0 0 0.75 -0.75v-8.5a0.75 0.75 0 0 0 -0.75 -0.75h-7.136a0.75 0.75 0 0 0 -0.75 0.75v8.5c0 0.414 0.336 0.75 0.75 0.75zm0.75-8.5h5.636v7h-5.636zm-28.457 13.675c0 0.415 0.336 0.75 0.75 0.75h24.047a0.75 0.75 0 0 0 0 -1.5h-24.047a0.75 0.75 0 0 0 -0.75 0.75zm24.797 3.755h-24.047a0.75 0.75 0 0 0 0 1.5h24.047a0.75 0.75 0 0 0 0 -1.5zm-8.086 4.504h-15.961a0.75 0.75 0 0 0 0 1.5h15.96a0.75 0.75 0 0 0 0 -1.5zm-26.586-21.934h15.96a0.75 0.75 0 0 0 0 -1.5h-15.96a0.75 0.75 0 0 0 0 1.5zm0 4.25h15.96a0.75 0.75 0 0 0 0 -1.5h-15.96a0.75 0.75 0 0 0 0 1.5z"></path>
+</svg>
+</div></div>
+<div class="sl-block" data-block-type="snippet" style="width: 299px; height: 48px; left: 430px; top: 441px;" data-block-id="0c736b89766358c01f98818855d90aef"><div class="sl-block-content" data-has-custom-html="" style="z-index: 18;">
+<p><a href="http://twitter.com/RedHatNews" style=" text-decoration:none; font-weight: 500; border:none; box-shadow: none; text-shadow: 0 .1em .25em rgba(0,0,0,0.1) ; min-width: 12em;font-size:.5em; letter-spacing:.031em; padding:.66666em 4em ; color:#fff !important" target="_blank">jpena@redhat.com</a></p>
+</div></div>
+<div class="sl-block" data-block-type="snippet" style="width: 299px; height: 48px; left: 699px; top: 440px;" data-block-id="3710934990734a67bf29506b71311cf7"><div class="sl-block-content" data-has-custom-html="" style="z-index: 20;">
+<p><a href="http://twitter.com/RedHatNews" style=" text-decoration:none; font-weight: 500; border:none; box-shadow: none; text-shadow: 0 .1em .25em rgba(0,0,0,0.1) ; min-width: 12em;font-size:.5em; letter-spacing:.031em; padding:.66666em 4em ; color:#fff !important" target="_blank">jpena at FreeNode</a></p>
+</div></div>
+<div class="sl-block" data-block-type="snippet" style="width: 60px; height: 37px; left: 697px; top: 446px;" data-block-id="3005a0fa86523fa316cff49123ff495e"><div class="sl-block-content" data-has-custom-html="" style="z-index: 21;">
+<p><strong>IRC</strong></p>
+</div></div></section>
+			</div>
+				<div id="theme-html-output"><a style="display:none;" href="http://www.redhat.com">redhat.com</a></div>
+		</div>
+
+		<script>
+			var SLConfig = {"deck": {"id":866055,"slug":"anatomy-of-an-openstack-distribution","title":"Anatomy of an openstack distribution","description":"","visibility":"self","published_at":null,"sanitize_messages":null,"thumbnail_url":"https://s3.amazonaws.com/media-p.slid.es/thumbnails/882c133b60de35ed7d187a5a12a4a075/thumb.jpg","view_count":0,"user":{"id":562938,"username":"jpena","name":"Javier Pena","description":null,"thumbnail_url":"https://www.gravatar.com/avatar/659d8254ef5235d8a163734889131b0e?s=140\u0026d=https%3A%2F%2Fs3.amazonaws.com%2Fstatic.slid.es%2Fimages%2Fdefault-profile-picture.png","paid":true,"pro":true,"lite":false,"team_id":32,"settings":{"id":407394,"present_controls":true,"present_upsizing":true,"present_notes":true},"enterprise":true,"membership":{"role":"member","manager":false,"activated":true}},"background_transition":"none","transition":"none","theme_id":176,"theme_font":"overpass2","theme_color":"no-color","auto_slide_interval":0,"comments_enabled":true,"forking_enabled":false,"rolling_links":false,"center":false,"should_loop":false,"share_notes":false,"slide_number":true,"rtl":false,"version":2,"collaborative":true,"deck_user_editor_limit":1,"data_updated_at":1483983372335,"font_typekit":null,"font_google":null,"notes":{}}};
+			SLConfig.current_user = {
+				name: "Javier Pena",
+				username: "jpena",
+				pro: true
+			};
+
+				SLConfig.theme = {"id":176,"created_at":"2014-05-27T12:38:16.183Z","updated_at":"2016-12-15T13:29:01.435Z","name":"Red Hat Corporate","thumbnail_url":"https://s3.amazonaws.com/media-p.slid.es/thumbnails/e59d512542669bdc507f48ac27fb6b5e/thumb.jpg","sanitize_messages":null,"slide_template_ids":[56708,56706,56689,28642,36442,27160,26765,26762,56684,56696,56697,56698,56699,56704,56703,56707],"font_typekit":"","font_google":""};
+
+			// Use the local font path
+			SLConfig.fonts_url = 'lib/fonts/';
+		</script>
+
+		<script src="lib/head.min.js"></script>
+		<script src="lib/reveal.min.js"></script>
+		<script src="lib/offline.js"></script>
+		<script>
+			// Make Slides speaker notes available in the reveal.js speaker view
+			if( SLConfig.deck.notes ) {
+				[].forEach.call( document.querySelectorAll( '.reveal .slides section' ), function( slide ) {
+
+					var value = SLConfig.deck.notes[ slide.getAttribute( 'data-id' ) ];
+					if( value && typeof value === 'string' ) {
+						slide.setAttribute( 'data-notes', value );
+					}
+
+				} );
+			}
+
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				mouseWheel: false,
+				showNotes: SLConfig.deck.share_notes,
+				slideNumber: SLConfig.deck.slide_number,
+
+				autoSlide: SLConfig.deck.auto_slide_interval || 0,
+				autoSlideStoppable: true,
+
+				rolling_links: SLConfig.deck.rolling_links || true,
+				center: SLConfig.deck.center || false,
+				loop: SLConfig.deck.should_loop || false,
+				rtl: SLConfig.deck.rtl || false,
+
+				transition: SLConfig.deck.transition,
+				backgroundTransition: SLConfig.deck.background_transition,
+
+				dependencies: [
+					{ src: 'lib/reveal-plugins/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'lib/reveal-plugins/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'lib/reveal-plugins/highlight/highlight.js', async: true, callback: function() { hljs.initHighlighting(); hljs.initHighlightingOnLoad(); } },
+					{ src: 'lib/reveal-plugins/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+		</script>
+
+		
+  <script id="theme-js-output" type="text/javascript">document.getElementById('theme-html-output').innerHTML = '<link  rel="stylesheet" href="https://overpassmonotest-30e2.kxcdn.com/overpass-mono.css" />';
+
+// (function() {
+// 
+//   var slidesInitInterval = setInterval( function() {
+//     if( window.SL && window.SL.view ) {
+//       // If we're in the editor, wait for the Blocks controller
+//       // to be initialized
+//       if( SL.editor ) {
+// 
+//         if( SL.editor.controllers && SL.editor.controllers.Blocks && SL.editor.controllers.Blocks.textSaved ) {
+//           SL.editor.controllers.Blocks.textSaved.add( function( element ) {
+//             var html = element.html();
+//             html = html.replace( /(@RedHat | @redhat)/g,                 '@redhat' );
+//             html = html.replace( 'redhat.com',                 'redhat.com' );
+//             html = html.replace( /(Red Hat|red hat|RedHat|Red hat|Redhat|redHat|red Hat)/g,  '<span class="name">Red Hat</span>' );
+//             html = html.replace( /( redhat |redhat )/g,  ' <span class="name">Red Hat</span> ' );
+//             html = html.replace( 'REDHAT',                    '<span class="name">RED HAT</span>' );
+//             html = html.replace( 'redhat<',                    '<span class="name">Red Hat</span><' );
+//             html = html.replace( 'openshift',                 '<span class="name">OpenShift</span>' );
+//             html = html.replace( '<span class="name"><span class="name">Red Hat</span></span>',                    '<span class="name">Red Hat</span>' );
+//             html = html.replace( 'redhat.com',                 'redhat.com' );
+//             html = html.replace( 'REDHAT.COM',                 'REDHAT.COM' );
+//             html = html.replace( '@redhat',                 '@redhat' );
+//             html = html.replace( /(@RedHatNews | @redhatnews)/g,                 '@RedHatNews' );
+//             html = html.replace( /(@RedHat | @redhat)/g,                 '@RedHatInc' );
+//             html = html.replace( /(RHEL-OSP|RHELOSP|Red Hat Enterprise Linux OpenStack Platform)/g,                 'Red Hat OpenStack Platform' );
+//             html = html.replace( /(openstack |openstack|open stack|openStack|Openstack)/g,                 'OpenStack' );
+//             html = html.replace( 'openstack',                    'OpenStack' );
+//             html = html.replace( 'openstack<',                    'OpenStack<' );
+// 
+//             element.html( html );
+//           } );
+// 
+//           clearInterval( slidesInitInterval );
+//         }
+// 
+//       }
+//       else {
+//         clearInterval( slidesInitInterval );
+//       }
+//     }
+//   }, 500 );
+// 
+// })();
+
+
+
+// piwik script
+var _paq = _paq || [];
+_paq.push(["trackPageView"]);
+_paq.push(["enableLinkTracking"]);
+
+(function() {
+var u = (("https:" == document.location.protocol) ? "https" : "http") +
+"://engstats.redhat.com/piwik/";
+_paq.push(["setTrackerUrl", u+"piwik.php"]);
+_paq.push(["setSiteId", "8"]);
+var d=document, g=d.createElement("script"),
+s=d.getElementsByTagName("script")[0]; g.type="text/javascript";
+g.defer=true; g.async=true; g.src=u+"piwik.js"; s.parentNode.insertBefore(g,s);
+})();
+
+
+
+ 
+function sliceString(selector) {
+    var elements = document.getElementsByClassName(selector);
+
+ 
+    for (var h=0; h<elements.length; h++){
+      var string = elements[h].innerText,
+          total = string.length,
+          div = '';
+
+// futile attempt to clean space
+var string = elements[h].innerText.trim();
+     
+      for (var i=0; i<total;  i++) {
+        var letter = string.charAt(i);
+        div+= '<span class="'+letter+'">'+letter+'</span>';
+      }
+      elements[h].innerHTML = div;
+    }        
+}
+sliceString('lettering');
+sliceString('lettering'); //no rogue spaces when fired twice for some reason
+
+
+
+// function sliceString(selector) {
+//    if (!document.querySelector) return;
+//    var string = document.querySelector(selector).innerText,
+//        total = string.length,
+//        html = '';
+//    for (var i=0; i<total; i++) {
+//        var letter = string.charAt(i);
+//        html+= '<span class="'+letter+'">'+letter+'</span>';
+//    }
+//    document.querySelector(selector).innerHTML = html;
+//}
+//sliceString('.lettering');</script>
+
+	</body>
+</html>
